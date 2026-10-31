@@ -44,7 +44,7 @@
     const areaDate = item.esaApprovedAt || item.esaFeedbackAt || "";
     const district = districtByCode[code] || "ไม่พบใน Main table";
     return [
-      clean(item.round?.title), clean(code), clean(school.name), district,
+      "" , clean(code), clean(school.name), district,
       hasRecord ? fullName(user) : "-",
       statusBadge(schoolStatus, schoolDate, hasRecord ? "ok" : "pending"),
       statusBadge(areaStatus || "รอการอนุมัติ", areaDate, areaStatus === "อนุมัติ" ? "ok" : "neutral"),
@@ -96,7 +96,7 @@
     summaryCount.textContent = items.length.toLocaleString("th-TH") + " รายการ";
     if (window.jQuery && jQuery.fn.DataTable) {
       dataTable = jQuery("#schoolTable").DataTable({
-        pageLength:10, lengthMenu:[[10,25,50,100,-1],[10,25,50,100,"ทั้งหมด"]],
+        pageLength:5, lengthMenu:[[5,10,25,50,100,-1],[5,10,25,50,100,"ทั้งหมด"]],
         order:[[2,"asc"]], autoWidth:false,
         language:{
           search:"ค้นหา:", lengthMenu:"แสดง _MENU_ รายการ",
@@ -105,7 +105,11 @@
           zeroRecords:"ไม่พบข้อมูลที่ค้นหา", emptyTable:"ไม่มีข้อมูล",
           paginate:{first:"แรก",last:"สุดท้าย",next:"ถัดไป",previous:"ก่อนหน้า"}
         },
-        columnDefs:[{targets:[7],orderable:false}]
+        columnDefs:[{targets:[0,7],orderable:false,searchable:false}],
+        drawCallback:function(){
+          const api = this.api();
+          api.column(0,{search:"applied",order:"applied"}).nodes().each((cell,index)=>{ cell.textContent = index + 1; });
+        }
       });
       applyFilters();
     }
@@ -133,6 +137,9 @@
     }
   }
   ["filterSchool","filterArea","filterDistrict"].forEach(id => $(id).addEventListener("change", applyFilters));
+  $("schoolNameSearch").addEventListener("input", (event) => {
+    if (dataTable) dataTable.column(2).search(event.target.value).draw();
+  });
   $("convertBtn").addEventListener("click", convert);
   $("clearBtn").addEventListener("click", () => {
     jsonInput.value = "";
@@ -142,7 +149,7 @@
     inputStatus.textContent = "รอรับข้อมูล";
     inputStatus.className = "small text-secondary ms-lg-2";
     errorBox.classList.add("d-none");
-    $("filterSchool").value = ""; $("filterArea").value = ""; $("filterDistrict").value = "";
+    $("filterSchool").value = ""; $("filterArea").value = ""; $("filterDistrict").value = ""; $("schoolNameSearch").value = "";
   });
   $("jsonFile").addEventListener("change", async (event) => {
     const file = event.target.files?.[0];
