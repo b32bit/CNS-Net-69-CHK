@@ -67,10 +67,10 @@
     const school = $("filterSchool").value;
     const area = $("filterArea").value;
     const district = $("filterDistrict").value;
-    dataTable.column(3).search(district ? "^" + $.fn.dataTable.util.escapeRegex(district) + "$" : "", true, false);
-    dataTable.column(5).search(school ? "^" + $.fn.dataTable.util.escapeRegex(school) : "", true, false);
+    dataTable.column(3).search(district ? "^" + jQuery.fn.dataTable.util.escapeRegex(district) + "$" : "", true, false);
+    dataTable.column(5).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
     if (area === "__not_approved") dataTable.column(6).search("^(?!อนุมัติ)", true, false);
-    else dataTable.column(6).search(area ? "^" + $.fn.dataTable.util.escapeRegex(area) : "", true, false);
+    else dataTable.column(6).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
     dataTable.draw();
   }
   function render(items) {
