@@ -37,3 +37,4 @@ body{font-family:"Sarabun",Tahoma,sans-serif;background:#f5f7fa;color:#172b44;fo
 .dt-container .dt-info,.dt-container .dt-paging{font-size:13px;color:#687789}
 .dt-container .dt-paging .dt-paging-button{padding:4px 9px!important}
 @media(max-width:767px){.brand{font-size:19px}.brand-subtitle{max-width:220px}.header-tag{display:none}.card-header,.card-body{padding:15px}.table-heading{align-items:flex-start;flex-direction:column}.json-input{min-height:145px}}
+.filter-toolbar{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px}.filter-label{font-size:12px;font-weight:600;color:#52677d;margin-bottom:4px}.filter-toolbar .form-select{font-family:inherit;font-size:13px;border-color:#dce3ea}
