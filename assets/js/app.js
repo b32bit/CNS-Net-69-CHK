@@ -36,7 +36,7 @@
     const school = item.mstSchool || {};
     const form = item.formInternet || {};
     const code = String(school.code || "").trim();
-    const hasRecord = form.id !== undefined && form.id !== null;
+    const hasRecord = form.id !== undefined && form.id !== null && String(form.id).trim() !== "";
     const user = form.createdByNavigation || {};
     const schoolStatus = hasRecord ? "บันทึกข้อมูล" : "ยังไม่มีการบันทึกข้อมูล";
     const areaStatus = item.stausTxtEsa || form.stausTxtEsa || "";
@@ -48,9 +48,17 @@
       hasRecord ? fullName(user) : "-",
       statusBadge(schoolStatus, schoolDate, hasRecord ? "ok" : "pending"),
       statusBadge(areaStatus || "รอการอนุมัติ", areaDate, areaStatus === "อนุมัติ" ? "ok" : "neutral"),
-      '<a class="action-btn" href="' + makeActionUrl(item) + '" target="_blank" rel="noopener noreferrer" aria-label="ดำเนินการ ' + escapeHtml(school.name || code) + '">ดำเนิน<br>การ</a>',
+      hasRecord ? '<span class="action-wrap"><a class="action-btn" href="' + makeActionUrl(item) + '" target="_blank" rel="noopener noreferrer" data-school-key="' + escapeHtml(school.id || code) + '" aria-label="ดำเนินการ ' + escapeHtml(school.name || code) + '">ดำเนิน<br>การ</a><span class="action-count" data-count-key="' + escapeHtml(school.id || code) + '" aria-live="polite"></span></span>' : "",
       clean(item.lastActionAt)
     ];
+  }
+  function getClickCount(key) {
+    try { return Math.max(0, Number(localStorage.getItem("cns69chk-click-" + key)) || 0); }
+    catch { return 0; }
+  }
+  function setClickCount(key, count) {
+    try { localStorage.setItem("cns69chk-click-" + key, String(count)); }
+    catch { /* Browser storage may be unavailable; current page still updates. */ }
   }
   function destroyTable() {
     if (dataTable) { dataTable.destroy(); dataTable = null; }
@@ -108,7 +116,16 @@
         columnDefs:[{targets:[0,7],orderable:false,searchable:false}],
         drawCallback:function(){
           const api = this.api();
-          api.column(0,{search:"applied",order:"applied"}).nodes().each((cell,index)=>{ cell.textContent = index + 1; });
+          const pageInfo = api.page.info();
+          api.column(0,{page:"current"}).nodes().each((cell,index)=>{ cell.textContent = pageInfo.start + index + 1; });
+          api.rows({page:"current"}).nodes().each((row)=>{
+            const link = row.querySelector(".action-btn");
+            if (!link) return;
+            const key = link.dataset.schoolKey;
+            const count = getClickCount(key);
+            const marker = row.querySelector(".action-count");
+            if (marker) marker.textContent = count ? " " + "✅".repeat(count) : "";
+          });
         }
       });
       applyFilters();
@@ -139,6 +156,16 @@
   ["filterSchool","filterArea","filterDistrict"].forEach(id => $(id).addEventListener("change", applyFilters));
   $("schoolNameSearch").addEventListener("input", (event) => {
     if (dataTable) dataTable.column(2).search(event.target.value).draw();
+  });
+  tableBody.addEventListener("click", (event) => {
+    const link = event.target.closest(".action-btn");
+    if (!link) return;
+    const key = link.dataset.schoolKey;
+    const count = getClickCount(key) + 1;
+    setClickCount(key, count);
+    const marker = link.parentElement.querySelector(".action-count");
+    if (marker) marker.textContent = " " + "✅".repeat(count);
+    link.title = "กดดำเนินการแล้ว " + count + " ครั้ง";
   });
   $("convertBtn").addEventListener("click", convert);
   $("clearBtn").addEventListener("click", () => {
