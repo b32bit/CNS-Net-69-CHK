@@ -48,11 +48,16 @@
     <div class="card-header table-heading">
       <div>
         <h2 class="section-title mb-1">รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ.</h2>
-        <p class="section-help mb-0">แสดงเฉพาะรายการที่อยู่ใน JSON ที่นำเข้า</p>
+        <p class="section-help mb-0">เชื่อมข้อมูลอำเภอจาก Main table ด้วยรหัสโรงเรียน (รหัส 10 หลัก) และแสดงเฉพาะรายการใน JSON</p>
       </div>
       <div class="summary-count" id="summaryCount">ยังไม่มีข้อมูล</div>
     </div>
     <div class="card-body">
+      <div class="filter-toolbar row g-2 mb-3">
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterSchool">สถานะโรงเรียน</label><select id="filterSchool" class="form-select form-select-sm"><option value="">ทุกสถานะ</option><option value="บันทึกข้อมูล">บันทึกข้อมูลแล้ว</option><option value="ยังไม่มีการบันทึกข้อมูล">ยังไม่มีการบันทึกข้อมูล</option></select></div>
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterArea">สถานะเขตพื้นที่</label><select id="filterArea" class="form-select form-select-sm"><option value="">ทุกสถานะ</option><option value="อนุมัติ">อนุมัติ</option><option value="__not_approved">ยังไม่อนุมัติ</option></select></div>
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterDistrict">อำเภอ</label><select id="filterDistrict" class="form-select form-select-sm"><option value="">ทุกอำเภอ</option></select></div>
+      </div>
       <div class="table-responsive">
         <table id="schoolTable" class="table table-bordered table-hover align-middle w-100">
           <thead>
@@ -60,6 +65,7 @@
               <th rowspan="2">รอบ<br>บันทึกข้อมูล</th>
               <th rowspan="2">รหัส</th>
               <th rowspan="2">โรงเรียน</th>
+              <th rowspan="2">อำเภอ</th>
               <th rowspan="2">ผู้ให้ข้อมูล</th>
               <th colspan="2" class="text-center">สถานะการดำเนินการ</th>
               <th rowspan="2" class="text-center">#</th>
@@ -68,7 +74,7 @@
             <tr><th class="text-center">โรงเรียน</th><th class="text-center">เขต</th></tr>
           </thead>
           <tbody id="schoolTableBody">
-            <tr><td colspan="8" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>
+            <tr><td colspan="9" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>
           </tbody>
         </table>
       </div>
