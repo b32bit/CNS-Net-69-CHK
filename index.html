@@ -54,6 +54,7 @@
     </div>
     <div class="card-body">
       <div class="filter-toolbar row g-2 mb-3">
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="schoolNameSearch">ค้นหาชื่อโรงเรียน</label><input id="schoolNameSearch" type="search" class="form-control form-control-sm" placeholder="พิมพ์ชื่อโรงเรียนที่ต้องการค้นหา"></div>
         <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterSchool">สถานะโรงเรียน</label><select id="filterSchool" class="form-select form-select-sm"><option value="">ทุกสถานะ</option><option value="บันทึกข้อมูล">บันทึกข้อมูลแล้ว</option><option value="ยังไม่มีการบันทึกข้อมูล">ยังไม่มีการบันทึกข้อมูล</option></select></div>
         <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterArea">สถานะเขตพื้นที่</label><select id="filterArea" class="form-select form-select-sm"><option value="">ทุกสถานะ</option><option value="อนุมัติ">อนุมัติ</option><option value="__not_approved">ยังไม่อนุมัติ</option></select></div>
         <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterDistrict">อำเภอ</label><select id="filterDistrict" class="form-select form-select-sm"><option value="">ทุกอำเภอ</option></select></div>
@@ -62,7 +63,7 @@
         <table id="schoolTable" class="table table-bordered table-hover align-middle w-100">
           <thead>
             <tr>
-              <th rowspan="2">รอบ<br>บันทึกข้อมูล</th>
+              <th rowspan="2" class="text-center">ลำดับ</th>
               <th rowspan="2">รหัส</th>
               <th rowspan="2">โรงเรียน</th>
               <th rowspan="2">อำเภอ</th>
