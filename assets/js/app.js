@@ -25,25 +25,39 @@
     const school = item.mstSchool || {};
     const form = item.formInternet || {};
     const round = item.round || {};
-    const params = new URLSearchParams();
-    params.set("id", form.id === null || form.id === undefined ? "" : String(form.id));
-    params.set("roundId", round.id === null || round.id === undefined ? "" : String(round.id));
-    params.set("month", item.month === null || item.month === undefined ? "" : String(item.month));
-    params.set("mstSchoolId", school.id === null || school.id === undefined ? "" : String(school.id));
+    const params = new URLSearchParams({
+      id: form.id ?? "",
+      roundId: round.id ?? "",
+      month: item.month ?? 0,
+      mstSchoolId: school.id ?? ""
+    });
     return "https://cns.obec.go.th/tracking/internet/create?" + params.toString();
+  }
+  function makeComActionUrl(item) {
+    const school = item.mstSchool || {};
+    const form = item.formComputer || {};
+    const round = item.round || {};
+    const params = new URLSearchParams({
+      id: form.id ?? "",
+      roundId: round.id ?? "",
+      month: item.month ?? 0,
+      mstSchoolId: school.id ?? "",
+      page: 1
+    });
+    return "https://cns.obec.go.th/tracking/computer/create?" + params.toString();
   }
   let dataType = "net";
   function setTableHead() {
     const net = dataType === "net";
     $("tableHead").innerHTML = net
-      ? '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน</th><th>อำเภอ</th><th>ผู้ให้ข้อมูล</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>'
-      : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน</th><th>อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">เพื่อการเรียนการสอน</th><th class="text-end">เพื่อการบริหาร</th><th class="text-end">รวม</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
+      ? '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>ผู้ให้ข้อมูล</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>'
+      : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">เพื่อการเรียนการสอน</th><th class="text-end">เพื่อการบริหาร</th><th class="text-end">รวม</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
     $("tableTitle").textContent = net
       ? "รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ."
       : "รายการการบันทึกข้อมูลด้านคอมพิวเตอร์พร้อมอุปกรณ์ในสังกัด สพฐ.";
     $("tableDescription").textContent = net
-      ? "เชื่อมข้อมูลอำเภอจาก Main table ด้วยรหัสโรงเรียน (รหัส 10 หลัก) และแสดงเฉพาะรายการใน JSON"
-      : "แสดงข้อมูลตาม formComputer ของรอบที่เลือก พร้อมจำนวนเครื่อง รูปแบบคอมพิวเตอร์ และสถานะการบันทึก";
+      ? "ค้นหาได้ทั้งรหัสโรงเรียนและชื่อโรงเรียน พร้อมแสดงอำเภอในคอลัมน์เดียวกัน"
+      : "แสดงข้อมูลตาม formComputer ของรอบที่เลือก พร้อมจำนวนเครื่อง รูปแบบคอมพิวเตอร์ และลิงก์ดำเนินการ";
   }
   function toNetRow(item) {
     const school = item.mstSchool || {};
@@ -54,11 +68,11 @@
     const schoolStatus = hasRecord ? "บันทึกข้อมูล" : "ยังไม่มีการบันทึกข้อมูล";
     const areaStatus = item.stausTxtEsa || form.stausTxtEsa || "";
     return [
-      "", clean(code), clean(school.name), districtByCode[code] || "ไม่พบใน Main table",
+      "", clean(code), schoolCell(school, code),
       hasRecord ? fullName(user) : "-",
       statusBadge(schoolStatus, item.lastUpdated || "", hasRecord ? "ok" : "pending"),
       statusBadge(areaStatus || "รอการอนุมัติ", item.esaApprovedAt || item.esaFeedbackAt || "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
-      hasRecord ? '<span class="action-wrap"><a class="action-btn" href="' + makeActionUrl(item) + '" target="_blank" rel="noopener noreferrer" data-school-key="' + escapeHtml(school.id || code) + '" aria-label="ดำเนินการ ' + escapeHtml(school.name || code) + '">ดำเนิน<br>การ</a><span class="action-count" data-count-key="' + escapeHtml(school.id || code) + '" aria-live="polite"></span></span>' : "",
+      hasRecord ? actionCell(item, makeActionUrl(item), school.id || code, school.name || code) : "",
       clean(item.lastActionAt)
     ];
   }
@@ -75,12 +89,13 @@
     const schoolStatus = item.stausTxtSch || form.stausTxtSch || (hasRecord ? "บันทึกข้อมูล" : "ยังไม่มีการบันทึกข้อมูล");
     const areaStatus = item.stausTxtEsa || form.stausTxtEsa || "รอการอนุมัติ";
     return [
-      "", clean(code), clean(school.name), districtByCode[code] || school.district || "ไม่พบใน Main table",
-      clean(format), hasRecord ? learning.toLocaleString("th-TH") : "-",
+      "", clean(code), schoolCell(school, code), clean(format),
+      hasRecord ? learning.toLocaleString("th-TH") : "-",
       hasRecord ? management.toLocaleString("th-TH") : "-",
       hasRecord ? (learning + management).toLocaleString("th-TH") : "-",
       statusBadge(schoolStatus, "", hasRecord ? "ok" : "pending"),
       statusBadge(areaStatus, item.esaApprovedAt || item.esaFeedbackAt || "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
+      hasRecord ? actionCell(item, makeComActionUrl(item), school.id || code, school.name || code) : "",
       clean(item.lastUpdated || item.lastActionAt)
     ];
   }
@@ -106,29 +121,23 @@
   function applyFilters() {
     if (!dataTable) return;
     const district = $("filterDistrict").value;
-    const districtColumn = 3;
-    dataTable.column(districtColumn).search(district ? "^" + jQuery.fn.dataTable.util.escapeRegex(district) + "$" : "", true, false);
-    if (dataType === "net") {
-      const school = $("filterSchool").value;
-      const area = $("filterArea").value;
-      dataTable.column(5).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
-      if (area === "__not_approved") dataTable.column(6).search("^(?!อนุมัติ)", true, false);
-      else dataTable.column(6).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
-    } else {
-      const school = $("filterSchool").value;
-      const area = $("filterArea").value;
-      dataTable.column(8).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
-      if (area === "__not_approved") dataTable.column(9).search("^(?!อนุมัติ)", true, false);
-      else dataTable.column(9).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
-    }
+    const school = $("filterSchool").value;
+    const area = $("filterArea").value;
+    dataTable.column(2).search(district ? jQuery.fn.dataTable.util.escapeRegex(district) : "", false, true);
+    const schoolStatusColumn = dataType === "net" ? 4 : 7;
+    const areaStatusColumn = dataType === "net" ? 5 : 8;
+    dataTable.column(schoolStatusColumn).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
+    if (area === "__not_approved") dataTable.column(areaStatusColumn).search("^(?!อนุมัติ)", true, false);
+    else dataTable.column(areaStatusColumn).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
     dataTable.draw();
   }
   function render(items) {
     destroyTable();
     tableBody.innerHTML = "";
     setTableHead();
+    const columnCount = dataType === "net" ? 8 : 11;
     if (!items.length) {
-      tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 9 : 11) + '" class="empty-state">ไม่พบรายการข้อมูลใน sourceData</td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="' + columnCount + '" class="empty-state">ไม่พบรายการข้อมูลใน sourceData</td></tr>';
       summaryCount.textContent = "0 รายการ";
       return;
     }
@@ -137,7 +146,8 @@
       const row = document.createElement("tr");
       toRow(item).forEach((value, index) => {
         const cell = document.createElement("td");
-        if (dataType === "net" ? [5,6,7].includes(index) : [8,9].includes(index)) cell.innerHTML = value;
+        const htmlColumns = dataType === "net" ? [2,4,5,6] : [2,7,8,9];
+        if (htmlColumns.includes(index)) cell.innerHTML = value;
         else cell.textContent = value;
         row.appendChild(cell);
       });
@@ -146,8 +156,7 @@
     tableBody.appendChild(fragment);
     summaryCount.textContent = items.length.toLocaleString("th-TH") + " รายการ";
     if (window.jQuery && jQuery.fn.DataTable) {
-      const statusColumns = dataType === "net" ? [5,6] : [8,9];
-      const noOrderColumns = dataType === "net" ? [0,7] : [0];
+      const noOrderColumns = dataType === "net" ? [0,6] : [0,9];
       dataTable = jQuery("#schoolTable").DataTable({
         pageLength:5, lengthMenu:[[5,10,25,50,100,-1],[5,10,25,50,100,"ทั้งหมด"]],
         order:[[2,"asc"]], autoWidth:false,
@@ -173,6 +182,8 @@
         }
       });
       applyFilters();
+      const searchValue = $("schoolNameSearch").value.trim();
+      if (searchValue) dataTable.search(searchValue).draw();
     }
   }
   function showError(message) {
@@ -199,7 +210,7 @@
   }
   ["filterSchool","filterArea","filterDistrict"].forEach(id => $(id).addEventListener("change", applyFilters));
   $("schoolNameSearch").addEventListener("input", (event) => {
-    if (dataTable) dataTable.column(2).search(event.target.value).draw();
+    if (dataTable) dataTable.search(event.target.value).draw();
   });
   tableBody.addEventListener("click", (event) => {
     const link = event.target.closest(".action-btn");
@@ -222,7 +233,7 @@
       setTableHead();
       if (jsonInput.value.trim()) convert();
       else {
-        tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 9 : 11) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 8 : 11) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
         summaryCount.textContent = "ยังไม่มีข้อมูล";
       }
     });
