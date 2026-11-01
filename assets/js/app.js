@@ -32,7 +32,20 @@
     params.set("mstSchoolId", school.id === null || school.id === undefined ? "" : String(school.id));
     return "https://cns.obec.go.th/tracking/internet/create?" + params.toString();
   }
-  function toRow(item) {
+  let dataType = "net";
+  function setTableHead() {
+    const net = dataType === "net";
+    $("tableHead").innerHTML = net
+      ? '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน</th><th>อำเภอ</th><th>ผู้ให้ข้อมูล</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>'
+      : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน</th><th>อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">เพื่อการเรียนการสอน</th><th class="text-end">เพื่อการบริหาร</th><th class="text-end">รวม</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
+    $("tableTitle").textContent = net
+      ? "รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ."
+      : "รายการการบันทึกข้อมูลด้านคอมพิวเตอร์พร้อมอุปกรณ์ในสังกัด สพฐ.";
+    $("tableDescription").textContent = net
+      ? "เชื่อมข้อมูลอำเภอจาก Main table ด้วยรหัสโรงเรียน (รหัส 10 หลัก) และแสดงเฉพาะรายการใน JSON"
+      : "แสดงข้อมูลตาม formComputer ของรอบที่เลือก พร้อมจำนวนเครื่อง รูปแบบคอมพิวเตอร์ และสถานะการบันทึก";
+  }
+  function toNetRow(item) {
     const school = item.mstSchool || {};
     const form = item.formInternet || {};
     const code = String(school.code || "").trim();
@@ -40,18 +53,38 @@
     const user = form.createdByNavigation || {};
     const schoolStatus = hasRecord ? "บันทึกข้อมูล" : "ยังไม่มีการบันทึกข้อมูล";
     const areaStatus = item.stausTxtEsa || form.stausTxtEsa || "";
-    const schoolDate = item.lastUpdated || "";
-    const areaDate = item.esaApprovedAt || item.esaFeedbackAt || "";
-    const district = districtByCode[code] || "ไม่พบใน Main table";
     return [
-      "" , clean(code), clean(school.name), district,
+      "", clean(code), clean(school.name), districtByCode[code] || "ไม่พบใน Main table",
       hasRecord ? fullName(user) : "-",
-      statusBadge(schoolStatus, schoolDate, hasRecord ? "ok" : "pending"),
-      statusBadge(areaStatus || "รอการอนุมัติ", areaDate, areaStatus === "อนุมัติ" ? "ok" : "neutral"),
+      statusBadge(schoolStatus, item.lastUpdated || "", hasRecord ? "ok" : "pending"),
+      statusBadge(areaStatus || "รอการอนุมัติ", item.esaApprovedAt || item.esaFeedbackAt || "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
       hasRecord ? '<span class="action-wrap"><a class="action-btn" href="' + makeActionUrl(item) + '" target="_blank" rel="noopener noreferrer" data-school-key="' + escapeHtml(school.id || code) + '" aria-label="ดำเนินการ ' + escapeHtml(school.name || code) + '">ดำเนิน<br>การ</a><span class="action-count" data-count-key="' + escapeHtml(school.id || code) + '" aria-live="polite"></span></span>' : "",
       clean(item.lastActionAt)
     ];
   }
+  function toComRow(item) {
+    const school = item.mstSchool || {};
+    const form = item.formComputer || {};
+    const code = String(school.code || "").trim();
+    const hasRecord = form.id !== undefined && form.id !== null && String(form.id).trim() !== "";
+    const learning = Number(form.qtyForLearning) || 0;
+    const management = Number(form.qtyForMgmt) || 0;
+    const format = form.mstComputerFormat?.title ||
+      form.mstComputerFormatForArea?.title ||
+      form.legacyComputerFormat || (form.isAnyComputer ? "มีคอมพิวเตอร์ (ไม่ระบุรูปแบบ)" : "-");
+    const schoolStatus = item.stausTxtSch || form.stausTxtSch || (hasRecord ? "บันทึกข้อมูล" : "ยังไม่มีการบันทึกข้อมูล");
+    const areaStatus = item.stausTxtEsa || form.stausTxtEsa || "รอการอนุมัติ";
+    return [
+      "", clean(code), clean(school.name), districtByCode[code] || school.district || "ไม่พบใน Main table",
+      clean(format), hasRecord ? learning.toLocaleString("th-TH") : "-",
+      hasRecord ? management.toLocaleString("th-TH") : "-",
+      hasRecord ? (learning + management).toLocaleString("th-TH") : "-",
+      statusBadge(schoolStatus, "", hasRecord ? "ok" : "pending"),
+      statusBadge(areaStatus, item.esaApprovedAt || item.esaFeedbackAt || "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
+      clean(item.lastUpdated || item.lastActionAt)
+    ];
+  }
+  function toRow(item) { return dataType === "net" ? toNetRow(item) : toComRow(item); }
   function getClickCount(key) {
     try { return Math.max(0, Number(localStorage.getItem("cns69chk-click-" + key)) || 0); }
     catch { return 0; }
@@ -72,20 +105,30 @@
   }
   function applyFilters() {
     if (!dataTable) return;
-    const school = $("filterSchool").value;
-    const area = $("filterArea").value;
     const district = $("filterDistrict").value;
-    dataTable.column(3).search(district ? "^" + jQuery.fn.dataTable.util.escapeRegex(district) + "$" : "", true, false);
-    dataTable.column(5).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
-    if (area === "__not_approved") dataTable.column(6).search("^(?!อนุมัติ)", true, false);
-    else dataTable.column(6).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
+    const districtColumn = 3;
+    dataTable.column(districtColumn).search(district ? "^" + jQuery.fn.dataTable.util.escapeRegex(district) + "$" : "", true, false);
+    if (dataType === "net") {
+      const school = $("filterSchool").value;
+      const area = $("filterArea").value;
+      dataTable.column(5).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
+      if (area === "__not_approved") dataTable.column(6).search("^(?!อนุมัติ)", true, false);
+      else dataTable.column(6).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
+    } else {
+      const school = $("filterSchool").value;
+      const area = $("filterArea").value;
+      dataTable.column(8).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
+      if (area === "__not_approved") dataTable.column(9).search("^(?!อนุมัติ)", true, false);
+      else dataTable.column(9).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
+    }
     dataTable.draw();
   }
   function render(items) {
     destroyTable();
     tableBody.innerHTML = "";
+    setTableHead();
     if (!items.length) {
-      tableBody.innerHTML = '<tr><td colspan="9" class="empty-state">ไม่พบรายการข้อมูลใน sourceData</td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 9 : 11) + '" class="empty-state">ไม่พบรายการข้อมูลใน sourceData</td></tr>';
       summaryCount.textContent = "0 รายการ";
       return;
     }
@@ -94,7 +137,7 @@
       const row = document.createElement("tr");
       toRow(item).forEach((value, index) => {
         const cell = document.createElement("td");
-        if ([5,6,7].includes(index)) cell.innerHTML = value;
+        if (dataType === "net" ? [5,6,7].includes(index) : [8,9].includes(index)) cell.innerHTML = value;
         else cell.textContent = value;
         row.appendChild(cell);
       });
@@ -103,6 +146,8 @@
     tableBody.appendChild(fragment);
     summaryCount.textContent = items.length.toLocaleString("th-TH") + " รายการ";
     if (window.jQuery && jQuery.fn.DataTable) {
+      const statusColumns = dataType === "net" ? [5,6] : [8,9];
+      const noOrderColumns = dataType === "net" ? [0,7] : [0];
       dataTable = jQuery("#schoolTable").DataTable({
         pageLength:5, lengthMenu:[[5,10,25,50,100,-1],[5,10,25,50,100,"ทั้งหมด"]],
         order:[[2,"asc"]], autoWidth:false,
@@ -113,7 +158,7 @@
           zeroRecords:"ไม่พบข้อมูลที่ค้นหา", emptyTable:"ไม่มีข้อมูล",
           paginate:{first:"แรก",last:"สุดท้าย",next:"ถัดไป",previous:"ก่อนหน้า"}
         },
-        columnDefs:[{targets:[0,7],orderable:false,searchable:false}],
+        columnDefs:[{targets:noOrderColumns,orderable:false,searchable:false}],
         drawCallback:function(){
           const api = this.api();
           const pageInfo = api.page.info();
@@ -121,10 +166,9 @@
           api.rows({page:"current"}).nodes().each((row)=>{
             const link = row.querySelector(".action-btn");
             if (!link) return;
-            const key = link.dataset.schoolKey;
-            const count = getClickCount(key);
+            const count = getClickCount(link.dataset.schoolKey);
             const marker = row.querySelector(".action-count");
-            if (marker) marker.textContent = count ? " " + "✅".repeat(count) : "";
+            if (marker) marker.textContent = count ? " " + "✅".repeat(Math.min(count,30)) : "";
           });
         }
       });
@@ -147,7 +191,7 @@
       if (!Array.isArray(items)) throw new Error('ไม่พบรายการ sourceData หรือข้อมูลไม่ใช่ Array');
       render(items);
       const unmatched = items.filter(x => !districtByCode[String(x.mstSchool?.code || "").trim()]).length;
-      inputStatus.textContent = "แปลงข้อมูลสำเร็จ " + items.length.toLocaleString("th-TH") + " รายการ · จับคู่ Main table ไม่พบ " + unmatched + " รายการ";
+      inputStatus.textContent = "แปลงข้อมูล " + (dataType === "net" ? "NET" : "COM") + " สำเร็จ " + items.length.toLocaleString("th-TH") + " รายการ · จับคู่ Main table ไม่พบ " + unmatched + " รายการ";
       inputStatus.className = "small " + (unmatched ? "text-warning" : "text-success") + " ms-lg-2";
     } catch (error) {
       showError("ไม่สามารถแปลง JSON ได้: " + error.message);
@@ -167,11 +211,28 @@
     if (marker) marker.textContent = " " + "✅".repeat(count);
     link.title = "กดดำเนินการแล้ว " + count + " ครั้ง";
   });
-  $("convertBtn").addEventListener("click", convert);
+  document.querySelectorAll(".data-type-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      dataType = button.dataset.type;
+      document.querySelectorAll(".data-type-btn").forEach((item) => {
+        const active = item === button;
+        item.classList.toggle("active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+      setTableHead();
+      if (jsonInput.value.trim()) convert();
+      else {
+        tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 9 : 11) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
+        summaryCount.textContent = "ยังไม่มีข้อมูล";
+      }
+    });
+  });
+  setTableHead();
+    $("convertBtn").addEventListener("click", convert);
   $("clearBtn").addEventListener("click", () => {
     jsonInput.value = "";
     destroyTable();
-    tableBody.innerHTML = '<tr><td colspan="9" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 9 : 11) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
     summaryCount.textContent = "ยังไม่มีข้อมูล";
     inputStatus.textContent = "รอรับข้อมูล";
     inputStatus.className = "small text-secondary ms-lg-2";
