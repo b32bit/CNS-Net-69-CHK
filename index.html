@@ -23,7 +23,7 @@
   </div>
 </header>
 <main class="container-fluid px-3 px-lg-4 py-4">
-  <section class="card app-card mb-4">
+  <section id="inputSection" class="card app-card mb-4">
     <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
       <div>
         <h1 class="section-title mb-1">นำเข้าข้อมูล JSON</h1>
@@ -53,7 +53,7 @@
       <div id="errorBox" class="alert alert-danger mt-3 mb-0 d-none" role="alert"></div>
     </div>
   </section>
-  <section class="card app-card">
+  <section id="tableSection" class="card app-card d-none">
     <div class="card-header table-heading">
       <div>
         <h2 class="section-title mb-1" id="tableTitle">รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ.</h2>
@@ -76,6 +76,19 @@
           </tbody>
         </table>
       </div>
+    </div>
+  </section>
+  <section id="guideSection" class="card app-card mb-4">
+    <div class="card-header"><h2 class="section-title mb-1">คำแนะนำการใช้งาน</h2></div>
+    <div class="card-body">
+      <ol class="guide-list mb-0">
+        <li>เลือกประเภทข้อมูลที่ต้องการตรวจสอบ ได้แก่ NET หรือ COM</li>
+        <li>วางข้อมูล JSON ที่คัดลอกจากระบบ CNS หรือเลือกไฟล์ JSON</li>
+        <li>กดปุ่ม “แปลงข้อมูล” เพื่อแสดงรายการในรูปแบบตาราง</li>
+        <li>ใช้ช่องค้นหาและตัวกรองเพื่อค้นหารหัสโรงเรียน ชื่อโรงเรียน อำเภอ และสถานะการบันทึก</li>
+        <li>กดปุ่ม “ดำเนินการ” เพื่อเปิดหน้ารายการของโรงเรียนนั้นในระบบ CNS</li>
+      </ol>
+      <p class="small text-secondary mt-3 mb-0">ข้อมูล JSON จะถูกประมวลผลภายใน Browser เท่านั้น ระบบนี้ไม่จัดเก็บหรือแก้ไขข้อมูลในระบบต้นทาง</p>
     </div>
   </section>
   <footer class="app-footer">CNS Net 69 CHK <span>•</span> เครื่องมือช่วยตรวจสอบข้อมูล ไม่แก้ไขข้อมูลในระบบต้นทาง</footer>
