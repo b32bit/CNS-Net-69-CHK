@@ -214,6 +214,7 @@
       $("inputSection").classList.add("d-none");
       $("guideSection").classList.add("d-none");
       $("tableSection").classList.remove("d-none");
+      $("footerSection").classList.add("d-none");
       const unmatched = items.filter(x => !districtByCode[String(x.mstSchool?.code || "").trim()]).length;
       inputStatus.textContent = "แปลงข้อมูล " + (dataType === "net" ? "NET" : "COM") + " สำเร็จ " + items.length.toLocaleString("th-TH") + " รายการ · จับคู่ Main table ไม่พบ " + unmatched + " รายการ";
       inputStatus.className = "small " + (unmatched ? "text-warning" : "text-success") + " ms-lg-2";
@@ -260,6 +261,7 @@
     $("inputSection").classList.remove("d-none");
     $("guideSection").classList.remove("d-none");
     $("tableSection").classList.add("d-none");
+    $("footerSection").classList.remove("d-none");
     tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 8 : 11) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
     summaryCount.textContent = "ยังไม่มีข้อมูล";
     inputStatus.textContent = "รอรับข้อมูล";
