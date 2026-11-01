@@ -41,3 +41,16 @@ body{font-family:"Sarabun",Tahoma,sans-serif;background:#f5f7fa;color:#172b44;fo
 .action-wrap{display:inline-flex;align-items:center;flex-wrap:wrap;gap:4px}
 .action-count{font-size:13px;line-height:1.5;overflow-wrap:anywhere}
 #schoolTable tbody td:first-child{text-align:center;min-width:55px;font-variant-numeric:tabular-nums}
+
+.data-type-toggle{display:flex;gap:10px;flex-wrap:wrap}
+.data-type-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid #d9e2eb;border-radius:9px;background:#fff;color:#36516b;font-family:inherit;text-align:left;cursor:pointer;transition:.15s}
+.data-type-btn:hover{border-color:#7da9cc;background:#f7fbff}
+.data-type-btn.active{border-color:#145b96;background:#edf6fc;box-shadow:0 0 0 2px rgba(20,91,150,.08);color:#104d7e}
+.type-code{font-size:13px;font-weight:700;letter-spacing:.5px;padding:4px 7px;border-radius:5px;background:#e7edf3;color:#39556e}
+.data-type-btn.active .type-code{background:#145b96;color:#fff}
+.type-name{font-size:13px;font-weight:600}
+#schoolTable td:nth-child(1){min-width:55px;max-width:70px;text-align:center}
+#schoolTable td:nth-child(3){min-width:155px}
+#schoolTable td:nth-child(5){min-width:145px}
+#schoolTable td:nth-child(6),#schoolTable td:nth-child(7),#schoolTable td:nth-child(8){text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:767px){.data-type-btn{flex:1 1 100%}}
