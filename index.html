@@ -32,6 +32,15 @@
       <span class="privacy-note"><span class="privacy-dot"></span> ประมวลผลภายใน Browser</span>
     </div>
     <div class="card-body">
+      <label class="form-label fw-semibold d-block">ประเภทข้อมูลที่ต้องการแปลง</label>
+      <div class="data-type-toggle mb-3" role="group" aria-label="เลือกประเภทข้อมูล">
+        <button type="button" class="data-type-btn active" data-type="net" aria-pressed="true">
+          <span class="type-code">NET</span><span class="type-name">เครือข่ายอินเทอร์เน็ต</span>
+        </button>
+        <button type="button" class="data-type-btn" data-type="com" aria-pressed="false">
+          <span class="type-code">COM</span><span class="type-name">คอมพิวเตอร์พร้อมอุปกรณ์</span>
+        </button>
+      </div>
       <label for="jsonInput" class="form-label fw-semibold">JSON Input</label>
       <textarea id="jsonInput" class="form-control json-input" spellcheck="false" placeholder='วาง JSON ที่มีโครงสร้าง {"total":193,"sourceData":[...]} ที่นี่'></textarea>
       <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
@@ -47,8 +56,8 @@
   <section class="card app-card">
     <div class="card-header table-heading">
       <div>
-        <h2 class="section-title mb-1">รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ.</h2>
-        <p class="section-help mb-0">เชื่อมข้อมูลอำเภอจาก Main table ด้วยรหัสโรงเรียน (รหัส 10 หลัก) และแสดงเฉพาะรายการใน JSON</p>
+        <h2 class="section-title mb-1" id="tableTitle">รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ.</h2>
+        <p class="section-help mb-0" id="tableDescription">เชื่อมข้อมูลอำเภอจาก Main table ด้วยรหัสโรงเรียน (รหัส 10 หลัก) และแสดงเฉพาะรายการใน JSON</p>
       </div>
       <div class="summary-count" id="summaryCount">ยังไม่มีข้อมูล</div>
     </div>
@@ -61,19 +70,7 @@
       </div>
       <div class="table-responsive">
         <table id="schoolTable" class="table table-bordered table-hover align-middle w-100">
-          <thead>
-            <tr>
-              <th rowspan="2" class="text-center">ลำดับ</th>
-              <th rowspan="2">รหัส</th>
-              <th rowspan="2">โรงเรียน</th>
-              <th rowspan="2">อำเภอ</th>
-              <th rowspan="2">ผู้ให้ข้อมูล</th>
-              <th colspan="2" class="text-center">สถานะการดำเนินการ</th>
-              <th rowspan="2" class="text-center">#</th>
-              <th rowspan="2">วันที่ดำเนินการ<br>ล่าสุด</th>
-            </tr>
-            <tr><th class="text-center">โรงเรียน</th><th class="text-center">เขต</th></tr>
-          </thead>
+          <thead id="tableHead"></thead>
           <tbody id="schoolTableBody">
             <tr><td colspan="9" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>
           </tbody>
