@@ -59,6 +59,16 @@
       ? "ค้นหาได้ทั้งรหัสโรงเรียนและชื่อโรงเรียน พร้อมแสดงอำเภอในคอลัมน์เดียวกัน"
       : "แสดงข้อมูลตาม formComputer ของรอบที่เลือก พร้อมจำนวนเครื่อง รูปแบบคอมพิวเตอร์ และลิงก์ดำเนินการ";
   }
+  function schoolCell(school, code) {
+    const district = districtByCode[code] || school.district || "ไม่พบใน Main table";
+    return '<span class="school-name">' + escapeHtml(school.name || "-") +
+      '</span><span class="school-district">' + escapeHtml(district) + '</span>';
+  }
+  function actionCell(item, url, key, label) {
+    return '<span class="action-wrap"><a class="action-btn" href="' + escapeHtml(url) +
+      '" target="_blank" rel="noopener noreferrer" data-school-key="' + escapeHtml(key) +
+      '" aria-label="ดำเนินการ ' + escapeHtml(label) + '">ดำเนิน<br>การ</a><span class="action-count" aria-live="polite"></span></span>';
+  }
   function toNetRow(item) {
     const school = item.mstSchool || {};
     const form = item.formInternet || {};
