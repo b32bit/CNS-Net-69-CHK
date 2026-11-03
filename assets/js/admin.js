@@ -18,9 +18,31 @@
     if (!user || typeof user !== "object") return "-";
     return [user.firstName, user.lastName].filter(Boolean).join(" ") || "-";
   }
+  function formatDateTime(value) {
+    if (value === null || value === undefined || String(value).trim() === "") return "-";
+    const input = String(value).trim();
+    let date = new Date(input);
+    if (Number.isNaN(date.getTime())) {
+      const thaiMonths = {
+        "ม.ค.":"01","ก.พ.":"02","มี.ค.":"03","เม.ย.":"04",
+        "พ.ค.":"05","มิ.ย.":"06","ก.ค.":"07","ส.ค.":"08",
+        "ก.ย.":"09","ต.ค.":"10","พ.ย.":"11","ธ.ค.":"12"
+      };
+      const match = input.match(/^(\d{1,2})\s+(ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\.)\s+(\d{4})\s+(\d{1,2}):(\d{2})$/);
+      if (match) {
+        let year = Number(match[3]);
+        if (year > 2400) year -= 543;
+        date = new Date(Number(year), Number(thaiMonths[match[2]]) - 1, Number(match[1]), Number(match[4]), Number(match[5]));
+      }
+    }
+    if (Number.isNaN(date.getTime())) return input;
+    const pad = number => String(number).padStart(2, "0");
+    return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()) +
+      " " + pad(date.getHours()) + ":" + pad(date.getMinutes());
+  }
   function statusBadge(label, date, kind) {
     const cls = kind === "ok" ? "status-ok" : kind === "pending" ? "status-pending" : "status-neutral";
-    const detail = date ? "<br>" + escapeHtml(date) : "";
+    const detail = date ? "<br>" + escapeHtml(formatDateTime(date)) : "";
     return '<span class="status-badge ' + cls + '">' + escapeHtml(label || "-") + detail + "</span>";
   }
   function makeActionUrl(item) {
@@ -48,7 +70,7 @@
     });
     return "https://cns.obec.go.th/tracking/computer/create?" + params.toString();
   }
-  let dataType = "net";
+  let dataType = "com";
   function setTableHead() {
     const net = dataType === "net";
     $("tableHead").innerHTML = net
@@ -85,7 +107,7 @@
       statusBadge(schoolStatus, item.lastUpdated || "", hasRecord ? "ok" : "pending"),
       statusBadge(areaStatus || "รอการอนุมัติ", item.esaApprovedAt || item.esaFeedbackAt || "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
       hasRecord ? actionCell(item, makeActionUrl(item), school.id || code, school.name || code) : "",
-      clean(item.lastActionAt)
+      formatDateTime(item.lastActionAt)
     ];
   }
   function toComRow(item) {
@@ -108,7 +130,7 @@
       statusBadge(schoolStatus, "", hasRecord ? "ok" : "pending"),
       statusBadge(areaStatus, item.esaApprovedAt || item.esaFeedbackAt || "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
       hasRecord ? actionCell(item, makeComActionUrl(item), school.id || code, school.name || code) : "",
-      clean(item.lastUpdated || item.lastActionAt)
+      formatDateTime(item.lastUpdated || item.lastActionAt)
     ];
   }
   function toRow(item) { return dataType === "net" ? toNetRow(item) : toComRow(item); }
