@@ -1,27 +1,119 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="CNS 69 NET COM Dashboard - ภาพรวมสถานะการบันทึกข้อมูลสถานศึกษา">
-<meta name="theme-color" content="#f6f8fb"><title>CNS 69 NET COM Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/dashboard.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CNS 69 NET COM Admin - เครื่องมือสำหรับผู้ดูแลตรวจสอบข้อมูล JSON">
+  <title>CNS 69 NET COM Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
 </head>
 <body>
-<header class="topbar"><div class="brand"><div class="brand-mark">CNS</div><div><div class="brand-title">CNS 69 <span>NET COM</span></div><div class="brand-subtitle">Dashboard ติดตามสถานะข้อมูลสถานศึกษา</div></div></div><div class="top-actions"><span id="connectionState" class="connection-state"><i></i> กำลังเชื่อมต่อ</span><button id="refreshButton" class="refresh-button" type="button">↻ รีเฟรช</button></div></header>
-<main class="page">
-<section class="intro"><div><p class="eyebrow">ภาพรวมข้อมูล</p><h1>สถานะการดำเนินงาน NET / COM</h1><p class="intro-text">ติดตามความครบถ้วนของการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตและคอมพิวเตอร์ของสถานศึกษา</p></div><div class="updated-box"><span>ปรับปรุงข้อมูลล่าสุด</span><strong id="updatedAt">กำลังโหลดข้อมูล...</strong></div></section>
-<section class="summary-grid">
-<article class="summary-card"><div class="summary-top"><span>โรงเรียนทั้งหมด</span><b class="icon school">▦</b></div><strong id="totalSchools" class="summary-value">—</strong><small>โรงเรียนที่พบในข้อมูล NET หรือ COM</small></article>
-<article class="summary-card"><div class="summary-top"><span>NET สมบูรณ์</span><b class="icon net">⌁</b></div><strong id="netComplete" class="summary-value">—</strong><small>ผ่านการอนุมัติจากเขตพื้นที่</small></article>
-<article class="summary-card"><div class="summary-top"><span>COM สมบูรณ์</span><b class="icon com">▤</b></div><strong id="comComplete" class="summary-value">—</strong><small>ผ่านการอนุมัติจากเขตพื้นที่</small></article>
-<article class="summary-card"><div class="summary-top"><span>NET และ COM ครบทั้งคู่</span><b class="icon both">✓</b></div><strong id="bothComplete" class="summary-value">—</strong><small>ทั้งสองด้านสมบูรณ์</small></article>
-</section>
-<section class="panel"><div class="panel-heading"><div><p class="eyebrow">School status</p><h2>สถานะรายโรงเรียน</h2><p class="panel-description">รวมข้อมูล NET และ COM ด้วยรหัสโรงเรียน</p></div><span id="visibleCount" class="total-pill">0 โรงเรียน</span></div>
-<div class="toolbar"><label class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="ค้นหารหัสหรือชื่อโรงเรียน"></label><label class="select-field"><span>อำเภอ</span><select id="districtFilter"><option value="">ทุกอำเภอ</option></select></label><label class="select-field"><span>ภาพรวม</span><select id="overallFilter"><option value="">ทุกสถานะ</option><option value="ดำเนินการแล้ว">ดำเนินการแล้ว</option><option value="ยังไม่ครบ">ยังไม่ครบ</option></select></label></div>
-<div id="errorMessage" class="error-message" role="alert" hidden></div>
-<div class="table-wrap"><table><thead><tr><th>โรงเรียน</th><th>อำเภอ</th><th>NET</th><th>COM</th><th>ภาพรวม</th></tr></thead><tbody id="schoolRows"><tr><td colspan="5" class="loading">กำลังโหลดข้อมูลจาก CNS...</td></tr></tbody></table></div>
-<div class="table-footer"><span id="resultInfo">กำลังเตรียมข้อมูล</span><div class="pagination"><button id="previousPage" type="button" disabled>ก่อนหน้า</button><span id="pageInfo">หน้า 1</span><button id="nextPage" type="button" disabled>ถัดไป</button></div></div></section>
-<footer class="footer"><span>CNS 69 NET COM Dashboard</span><span>ข้อมูลเพื่อการติดตามและตรวจสอบ · Read only</span></footer>
-</main><script src="assets/js/dashboard.js"></script></body></html>
+<header class="app-header">
+  <div class="container-fluid px-3 px-lg-4 py-3 d-flex align-items-center justify-content-between gap-3">
+    <div>
+      <a class="brand" href="index.html" aria-label="รีเฟรชหน้า Admin">CNS 69 <span>NET COM Admin</span></a>
+      <div class="brand-subtitle">เครื่องมือสำหรับผู้ดูแลระบบ · JSON Data Converter</div>
+    </div>
+    <span class="header-tag">Admin · ไม่เชื่อมโยงจาก Dashboard</span>
+  </div>
+</header>
+<main class="container-fluid px-3 px-lg-4 py-4">
+  <section id="inputSection" class="card app-card mb-4">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>
+        <h1 class="section-title mb-1">นำเข้าข้อมูล JSON</h1>
+        <p class="section-help mb-0">วางข้อมูล JSON จาก CNS Net เพื่อแปลงเป็นตารางตรวจสอบ</p>
+      </div>
+      <span class="privacy-note"><span class="privacy-dot"></span> ประมวลผลภายใน Browser</span>
+    </div>
+    <div class="card-body">
+      <label class="form-label fw-semibold d-block">ประเภทข้อมูลที่ต้องการแปลง</label>
+      <div class="data-type-toggle mb-3" role="group" aria-label="เลือกประเภทข้อมูล">
+        <button type="button" class="data-type-btn" data-type="net" aria-pressed="false">
+          <span class="type-code">NET</span><span class="type-name">เครือข่ายอินเทอร์เน็ต</span>
+        </button>
+        <button type="button" class="data-type-btn active" data-type="com" aria-pressed="true">
+          <span class="type-code">COM</span><span class="type-name">คอมพิวเตอร์พร้อมอุปกรณ์</span>
+        </button>
+      </div>
+      <label for="jsonInput" class="form-label fw-semibold">JSON Input</label>
+      <textarea id="jsonInput" class="form-control json-input" spellcheck="false" placeholder='วาง JSON ที่มีโครงสร้าง {"total":193,"sourceData":[...]} ที่นี่'></textarea>
+      <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+        <button id="convertBtn" class="btn btn-primary px-4" type="button">แปลงข้อมูล</button>
+        <button id="clearBtn" class="btn btn-outline-secondary" type="button">ล้างข้อมูล</button>
+        <label class="btn btn-outline-secondary mb-0" for="jsonFile">เลือกไฟล์ JSON</label>
+        <input id="jsonFile" type="file" accept=".json,application/json,text/plain" class="visually-hidden">
+        <span id="inputStatus" class="small text-secondary ms-lg-2" role="status" aria-live="polite">รอรับข้อมูล</span>
+      </div>
+      <div id="errorBox" class="alert alert-danger mt-3 mb-0 d-none" role="alert"></div>
+    </div>
+  </section>
+  <section id="tableSection" class="card app-card d-none">
+    <div class="card-header table-heading">
+      <div>
+        <h2 class="section-title mb-1" id="tableTitle">รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ.</h2>
+        <p class="section-help mb-0" id="tableDescription">เชื่อมข้อมูลอำเภอจาก Main table ด้วยรหัสโรงเรียน (รหัส 10 หลัก) และแสดงเฉพาะรายการใน JSON</p>
+      </div>
+      <div class="summary-count" id="summaryCount">ยังไม่มีข้อมูล</div>
+    </div>
+    <div class="card-body">
+      <ul class="nav nav-tabs mb-3" id="resultTabs" role="tablist">
+        <li class="nav-item" role="presentation"><button class="nav-link active" id="recordsTab" type="button" role="tab" aria-selected="true">รายการ NET / COM</button></li>
+        <li class="nav-item" role="presentation"><button class="nav-link" id="reportersTab" type="button" role="tab" aria-selected="false">ผู้รายงานข้อมูล</button></li>
+      </ul>
+      <div id="recordsTabPane">
+      <div class="filter-toolbar row g-2 mb-3">
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="schoolNameSearch">ค้นหารหัส / ชื่อโรงเรียน</label><input id="schoolNameSearch" type="search" class="form-control form-control-sm" placeholder="พิมพ์รหัสโรงเรียนหรือชื่อโรงเรียน"></div>
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterSchool">สถานะโรงเรียน</label><select id="filterSchool" class="form-select form-select-sm"><option value="">ทุกสถานะ</option><option value="บันทึกข้อมูล">บันทึกข้อมูลแล้ว</option><option value="ยังไม่มีการบันทึกข้อมูล">ยังไม่มีการบันทึกข้อมูล</option></select></div>
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterArea">สถานะเขตพื้นที่</label><select id="filterArea" class="form-select form-select-sm"><option value="">ทุกสถานะ</option><option value="อนุมัติ">อนุมัติ</option><option value="__not_approved">ยังไม่อนุมัติ</option></select></div>
+        <div class="col-12 col-md-4"><label class="form-label filter-label" for="filterDistrict">อำเภอ</label><select id="filterDistrict" class="form-select form-select-sm"><option value="">ทุกอำเภอ</option></select></div>
+      </div>
+      <div class="table-responsive">
+        <table id="schoolTable" class="table table-bordered table-hover align-middle w-100">
+          <thead id="tableHead"></thead>
+          <tbody id="schoolTableBody">
+            <tr><td colspan="9" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+      <div id="reportersTabPane" class="d-none">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <div class="section-help">รายชื่อผู้รายงานที่พบใน JSON ประเภทที่เลือก</div>
+          <div class="summary-count" id="reporterCount">0 รายชื่อ</div>
+        </div>
+        <div class="table-responsive">
+          <table id="reporterTable" class="table table-bordered table-hover align-middle w-100">
+            <thead><tr><th>ชื่อ - สกุล</th><th>ชื่อเล่น</th><th class="text-center">เบอร์โทรศัพท์</th><th>ตำแหน่ง</th></tr></thead>
+            <tbody id="reporterTableBody"><tr><td colspan="4" class="empty-state">แปลงข้อมูลเพื่อแสดงรายชื่อผู้รายงาน</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="guideSection" class="card app-card mb-4">
+    <div class="card-header"><h2 class="section-title mb-1">คำแนะนำการใช้งาน</h2></div>
+    <div class="card-body">
+      <ol class="guide-list mb-0">
+        <li>เลือกประเภทข้อมูลที่ต้องการตรวจสอบ ได้แก่ NET หรือ COM</li>
+        <li>วางข้อมูล JSON ที่คัดลอกจากระบบ CNS หรือเลือกไฟล์ JSON</li>
+        <li>กดปุ่ม “แปลงข้อมูล” เพื่อแสดงรายการในรูปแบบตาราง</li>
+        <li>ใช้ช่องค้นหาและตัวกรองเพื่อค้นหารหัสโรงเรียน ชื่อโรงเรียน อำเภอ และสถานะการบันทึก</li>
+        <li>กดปุ่ม “ดำเนินการ” เพื่อเปิดหน้ารายการของโรงเรียนนั้นในระบบ CNS</li>
+      </ol>
+      <p class="small text-secondary mt-3 mb-0">ข้อมูล JSON จะถูกประมวลผลภายใน Browser เท่านั้น ระบบนี้ไม่จัดเก็บหรือแก้ไขข้อมูลในระบบต้นทาง</p>
+    </div>
+  </section>
+  <footer class="app-footer">CNS Net 69 CHK <span>•</span> เครื่องมือช่วยตรวจสอบข้อมูล ไม่แก้ไขข้อมูลในระบบต้นทาง</footer>
+</main>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
