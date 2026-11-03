@@ -44,13 +44,14 @@ API endpoint ถูกกำหนดไว้ใน `assets/js/app.js` ผ่�
 
 Repository Settings → Pages → Build and deployment → Source เลือก GitHub Actions
 
-เว็บไซต์: https://b32bit.github.io/CNS-Net-69-CHK/
+Dashboard: https://b32bit.github.io/CNS-Net-69-CHK/dashboard.html
+Admin: https://b32bit.github.io/CNS-Net-69-CHK/
 
 
 ## Public Dashboard and Admin page
 
-- `index.html`: Public read-only NET/COM Dashboard connected to Google Apps Script.
-- `admin6ac4997467e08191bc11.html`: Separate legacy JSON conversion/checking page for administrative use. It is intentionally not linked from the public Dashboard.
+- `dashboard.html`: Public read-only NET/COM Dashboard connected to Google Apps Script.
+- `index.html`: Admin JSON conversion/checking page for administrative use. It is intentionally not linked from the public Dashboard.
 - `assets/js/app.js`: Public Dashboard logic.
 - `assets/js/admin.js`: Admin JSON conversion logic, kept separate from the public Dashboard.
 
