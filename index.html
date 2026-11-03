@@ -1,10 +1,27 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="CNS 69 NET COM Dashboard - ภาพรวมสถานะการบันทึกข้อมูลสถานศึกษา">
+<meta name="theme-color" content="#f6f8fb"><title>CNS 69 NET COM Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
 <body>
-</body>
-</html>
+<header class="topbar"><div class="brand"><div class="brand-mark">CNS</div><div><div class="brand-title">CNS 69 <span>NET COM</span></div><div class="brand-subtitle">Dashboard ติดตามสถานะข้อมูลสถานศึกษา</div></div></div><div class="top-actions"><span id="connectionState" class="connection-state"><i></i> กำลังเชื่อมต่อ</span><button id="refreshButton" class="refresh-button" type="button">↻ รีเฟรช</button></div></header>
+<main class="page">
+<section class="intro"><div><p class="eyebrow">ภาพรวมข้อมูล</p><h1>สถานะการดำเนินงาน NET / COM</h1><p class="intro-text">ติดตามความครบถ้วนของการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตและคอมพิวเตอร์ของสถานศึกษา</p></div><div class="updated-box"><span>ปรับปรุงข้อมูลล่าสุด</span><strong id="updatedAt">กำลังโหลดข้อมูล...</strong></div></section>
+<section class="summary-grid">
+<article class="summary-card"><div class="summary-top"><span>โรงเรียนทั้งหมด</span><b class="icon school">▦</b></div><strong id="totalSchools" class="summary-value">—</strong><small>โรงเรียนที่พบในข้อมูล NET หรือ COM</small></article>
+<article class="summary-card"><div class="summary-top"><span>NET สมบูรณ์</span><b class="icon net">⌁</b></div><strong id="netComplete" class="summary-value">—</strong><small>ผ่านการอนุมัติส่วนกลาง</small></article>
+<article class="summary-card"><div class="summary-top"><span>COM สมบูรณ์</span><b class="icon com">▤</b></div><strong id="comComplete" class="summary-value">—</strong><small>ผ่านการอนุมัติส่วนกลาง</small></article>
+<article class="summary-card"><div class="summary-top"><span>NET และ COM ครบทั้งคู่</span><b class="icon both">✓</b></div><strong id="bothComplete" class="summary-value">—</strong><small>ทั้งสองด้านสมบูรณ์</small></article>
+</section>
+<section class="panel"><div class="panel-heading"><div><p class="eyebrow">School status</p><h2>สถานะรายโรงเรียน</h2><p class="panel-description">รวมข้อมูล NET และ COM ด้วยรหัสโรงเรียน</p></div><span id="visibleCount" class="total-pill">0 โรงเรียน</span></div>
+<div class="toolbar"><label class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="ค้นหารหัสหรือชื่อโรงเรียน"></label><label class="select-field"><span>อำเภอ</span><select id="districtFilter"><option value="">ทุกอำเภอ</option></select></label><label class="select-field"><span>ภาพรวม</span><select id="overallFilter"><option value="">ทุกสถานะ</option><option value="ดำเนินการแล้ว">ดำเนินการแล้ว</option><option value="ยังไม่ครบ">ยังไม่ครบ</option></select></label></div>
+<div id="errorMessage" class="error-message" role="alert" hidden></div>
+<div class="table-wrap"><table><thead><tr><th>โรงเรียน</th><th>อำเภอ</th><th>NET</th><th>COM</th><th>ภาพรวม</th></tr></thead><tbody id="schoolRows"><tr><td colspan="5" class="loading">กำลังโหลดข้อมูลจาก CNS...</td></tr></tbody></table></div>
+<div class="table-footer"><span id="resultInfo">กำลังเตรียมข้อมูล</span><div class="pagination"><button id="previousPage" type="button" disabled>ก่อนหน้า</button><span id="pageInfo">หน้า 1</span><button id="nextPage" type="button" disabled>ถัดไป</button></div></div></section>
+<footer class="footer"><span>CNS 69 NET COM Dashboard</span><span>ข้อมูลเพื่อการติดตามและตรวจสอบ · Read only</span></footer>
+</main><script src="assets/js/dashboard.js"></script></body></html>
