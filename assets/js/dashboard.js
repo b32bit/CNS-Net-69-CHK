@@ -6,7 +6,14 @@ const code=x=>String(x?.schoolCode||"").trim(),has=x=>!!x&&x.hasRecord===true,ap
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=x=>Number(x||0).toLocaleString("th-TH");
 const district=x=>districtByCode[code(x)]||String(x?.district||"").trim()||"ไม่ระบุ";
-function status(x){if(!has(x))return["ยังไม่ดำเนินการ","not-started"];if(x.isEsaRejected||x.isCenRejected)return["ต้องแก้ไข","not-started"];if(approved(x))return["สมบูรณ์","complete"];let c=String(x.centralStatus||"");let a=String(x.esaStatus||"");if(/รอตรวจสอบ|รอการตรวจสอบ/.test(c))return["รอตรวจสอบ","review"];if(/รอ/.test(c))return[c,"review"];if(/อนุมัติ/.test(a)||x.isEsaApproved)return["รอตรวจสอบ","review"];return["บันทึกแล้ว","saved"];}
+function status(x){
+ if(!has(x))return["ยังไม่ดำเนินการ","not-started"];
+ if(x.isEsaRejected===true)return["ต้องแก้ไข","not-started"];
+ if(approved(x))return["อนุมัติแล้ว","complete"];
+ const area=String(x.esaStatus||"").trim();
+ if(/รอตรวจสอบ|รอการตรวจสอบ|รออนุมัติ|รอการอนุมัติ/.test(area))return["รอเขตพื้นที่ตรวจสอบ","review"];
+ return["บันทึกแล้ว · รอเขตพื้นที่อนุมัติ","saved"];
+}
 function overall(n,c){return has(n)&&has(c)?["ดำเนินการแล้ว","overall-done"]:["ยังไม่ครบ","overall-incomplete"];}
 function merge(net,com){let m=new Map();[["net",net],["com",com]].forEach(([type,list])=>list.forEach(x=>{let k=code(x);if(!k)return;if(!m.has(k))m.set(k,{code:k,name:String(x.schoolName||""),district:district(x),net:null,com:null});let s=m.get(k);if(!s.name)s.name=String(x.schoolName||"");if(s.district==="ไม่ระบุ")s.district=district(x);s[type]=x;}));return [...m.values()].sort((a,b)=>a.district.localeCompare(b.district,"th")||a.name.localeCompare(b.name,"th"));}
 function jsonp(){return new Promise((resolve,reject)=>{let name="cnsDash"+(++cb),script=document.createElement("script"),done=false,t=setTimeout(()=>finish(Error("หมดเวลารอข้อมูลจาก API")),30000);function finish(e,v){if(done)return;done=true;clearTimeout(t);delete window[name];script.remove();e?reject(e):resolve(v);}window[name]=v=>{if(!v?.success||!Array.isArray(v.net)||!Array.isArray(v.com))return finish(Error(v?.error||"รูปแบบข้อมูล API ไม่ถูกต้อง"));finish(null,v);};script.onerror=()=>finish(Error("เชื่อมต่อ Google Apps Script ไม่สำเร็จ"));script.src=API_URL+"?callback="+name+"&_="+Date.now();document.head.appendChild(script);});}
