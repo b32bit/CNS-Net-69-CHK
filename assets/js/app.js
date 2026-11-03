@@ -239,7 +239,6 @@
       statusText.textContent = "เชื่อมต่อสำเร็จ · NET " + apiData.net.length.toLocaleString("th-TH") +
         " รายการ · COM " + apiData.com.length.toLocaleString("th-TH") + " รายการ · อัปเดต " + stamp;
       statusText.className = "small text-success";
-      $("inputSection").classList.add("d-none");
       $("guideSection").classList.remove("d-none");
       $("footerSection").classList.remove("d-none");
     } catch (error) {
