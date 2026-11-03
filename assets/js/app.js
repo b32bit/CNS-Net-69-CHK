@@ -63,7 +63,7 @@
     const net = dataType === "net";
     $("tableHead").innerHTML = net
       ? '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>สถานะการบันทึกของโรงเรียน</th><th>การอนุมัติของเขตพื้นที่</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>'
-      : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">เพื่อการเรียนการสอน</th><th class="text-end">เพื่อการบริหาร</th><th class="text-end">รวม</th><th>สถานะโรงเรียน</th><th>สถานะเขตพื้นที่</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
+      : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">เพื่อการเรียนการสอน</th><th class="text-end">เพื่อการบริหาร</th><th class="text-end">รวม</th><th>สถานะการบันทึกของโรงเรียน</th><th>การอนุมัติของเขตพื้นที่</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
     $("tableTitle").textContent = net
       ? "รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ."
       : "รายการการบันทึกข้อมูลด้านคอมพิวเตอร์พร้อมอุปกรณ์ในสังกัด สพฐ.";
