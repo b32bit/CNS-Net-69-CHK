@@ -129,6 +129,16 @@
     }
     return "";
   }
+  function formatPhone(value) {
+    const original = String(value ?? "").trim();
+    if (!original) return "-";
+    let digits = original.replace(/\\D/g, "");
+    if (digits.length === 11 && digits.startsWith("66")) digits = "0" + digits.slice(2);
+    if (digits.length === 10 && digits.startsWith("0")) {
+      return digits.slice(0, 3) + "-" + digits.slice(3, 6) + "-" + digits.slice(6);
+    }
+    return original;
+  }
   function reporterFor(item) {
     const form = dataType === "net" ? (item.formInternet || {}) : (item.formComputer || {});
     const user = form.createdByNavigation || item.createdByNavigation || {};
@@ -139,7 +149,7 @@
     return {
       fullName: fullName(user),
       nickname: firstValue(user, ["nickname","nickName","nick_name","alias"]) || "-",
-      phone: firstValue(user, ["phoneNumber","phone","telephone","mobile","mobilePhone","tel"]) || "-",
+      phone: formatPhone(firstValue(user, ["phoneNumber","phone","telephone","mobile","mobilePhone","tel"])),
       position: [position, school.name, district].filter(value => value !== undefined && value !== null && String(value).trim() !== "").join(" ") || "-"
     };
   }
