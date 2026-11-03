@@ -79,9 +79,39 @@
       '</span> <span class="school-district">(' + escapeHtml(district) + ')</span>';
   }
 
+  function makeNetActionUrl(item) {
+    const params = new URLSearchParams({
+      id: item.formId || "",
+      roundId: item.roundId || "",
+      month: item.month ?? 0,
+      mstSchoolId: item.schoolId || ""
+    });
+    return "https://cns.obec.go.th/tracking/internet/create?" + params.toString();
+  }
+
+  function makeComActionUrl(item) {
+    const params = new URLSearchParams({
+      id: item.formId || "",
+      roundId: item.roundId || "",
+      month: item.month ?? 0,
+      mstSchoolId: item.schoolId || "",
+      page: 1
+    });
+    return "https://cns.obec.go.th/tracking/computer/create?" + params.toString();
+  }
+
   function actionCell(item) {
-    // API รุ่นปัจจุบันยังไม่ส่ง form ID / round ID / school ID จึงยังสร้าง deep link ที่ถูกต้องไม่ได้
-    return '<span class="text-secondary" title="รอเพิ่มรหัสรายการใน API">-</span>';
+    const code = schoolCode(item);
+    const requiredIds = [item.schoolId, item.roundId];
+    if (item.hasRecord !== true || !item.formId || requiredIds.some(value => value === null || value === undefined || String(value).trim() === "")) {
+      return '<span class="text-secondary" title="ไม่มีข้อมูลรายการสำหรับดำเนินการ">-</span>';
+    }
+
+    const url = dataType === "net" ? makeNetActionUrl(item) : makeComActionUrl(item);
+    const label = dataType === "net" ? "เครือข่ายอินเทอร์เน็ต" : "คอมพิวเตอร์";
+    return '<span class="action-wrap"><a class="action-btn" href="' + escapeHtml(url) +
+      '" target="_blank" rel="noopener noreferrer" data-school-key="' + escapeHtml(code) +
+      '" aria-label="ดำเนินการ ' + escapeHtml(label) + '">ดำเนิน<br>การ</a><span class="action-count" aria-live="polite"></span></span>';
   }
 
   function toNetRow(item) {
