@@ -62,7 +62,7 @@
   function setTableHead() {
     const net = dataType === "net";
     $("tableHead").innerHTML = net
-      ? '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>สถานะโรงเรียน</th><th>สถานะเขตพื้นที่</th><th>สถานะส่วนกลาง</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>'
+      ? '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>สถานะการบันทึกของโรงเรียน</th><th>การอนุมัติของเขตพื้นที่</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>'
       : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">เพื่อการเรียนการสอน</th><th class="text-end">เพื่อการบริหาร</th><th class="text-end">รวม</th><th>สถานะโรงเรียน</th><th>สถานะเขตพื้นที่</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
     $("tableTitle").textContent = net
       ? "รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ."
@@ -117,12 +117,10 @@
   function toNetRow(item) {
     const schoolStatus = item.schoolStatus || (item.hasRecord ? "บันทึกข้อมูล" : "ยังไม่มีการบันทึกข้อมูล");
     const areaStatus = item.esaStatus || "รอการอนุมัติ";
-    const centralStatus = item.centralStatus || "รอตรวจสอบ";
-    return [
+        return [
       "", clean(schoolCode(item)), schoolCell(item),
-      statusBadge(schoolStatus, item.lastUpdated, schoolStatus === "บันทึกข้อมูล" ? "ok" : "pending"),
-      statusBadge(areaStatus, "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
-      statusBadge(centralStatus, "", centralStatus === "อนุมัติ" ? "ok" : "neutral"),
+      statusBadge(schoolStatus, item.lastUpdated, item.hasRecord === true ? "ok" : "pending"),
+      statusBadge(areaStatus, "", item.isEsaApproved === true || areaStatus === "อนุมัติ" ? "ok" : "neutral"),
       actionCell(item), clean(item.lastActionAt)
     ];
   }
@@ -179,7 +177,7 @@
     }
     tableBody.innerHTML = "";
     setTableHead();
-    const columnCount = dataType === "net" ? 8 : 11;
+    const columnCount = dataType === "net" ? 7 : 11;
     if (!items.length) {
       tableBody.innerHTML = '<tr><td colspan="' + columnCount + '" class="empty-state">ไม่พบข้อมูล</td></tr>';
       summaryCount.textContent = "0 รายการ";
@@ -192,7 +190,7 @@
       const row = document.createElement("tr");
       values.forEach((value, index) => {
         const cell = document.createElement("td");
-        const htmlColumns = dataType === "net" ? [2,3,4,5,6] : [2,7,8,9];
+        const htmlColumns = dataType === "net" ? [2,3,4,5] : [2,7,8,9];
         if (htmlColumns.includes(index)) cell.innerHTML = value;
         else cell.textContent = value;
         row.appendChild(cell);
@@ -203,7 +201,7 @@
     summaryCount.textContent = items.length.toLocaleString("th-TH") + " รายการ";
 
     if (window.jQuery && jQuery.fn.DataTable) {
-      const noOrderColumns = dataType === "net" ? [0,6] : [0,9];
+      const noOrderColumns = dataType === "net" ? [0,5] : [0,9];
       dataTable = jQuery("#schoolTable").DataTable({
         pageLength: 10,
         lengthMenu: [[5,10,25,50,100,-1],[5,10,25,50,100,"ทั้งหมด"]],
