@@ -72,6 +72,7 @@
       <ul class="nav nav-tabs mb-3" id="resultTabs" role="tablist">
         <li class="nav-item" role="presentation"><button class="nav-link active" id="recordsTab" type="button" role="tab" aria-selected="true">รายการ NET / COM</button></li>
         <li class="nav-item" role="presentation"><button class="nav-link" id="reportersTab" type="button" role="tab" aria-selected="false">ผู้รายงานข้อมูล</button></li>
+        <li class="nav-item" role="presentation"><button class="nav-link" id="analysisTab" type="button" role="tab" aria-selected="false">วิเคราะห์ข้อมูล</button></li>
       </ul>
       <div id="recordsTabPane">
       <div class="filter-toolbar row g-2 mb-3">
@@ -88,6 +89,18 @@
           </tbody>
         </table>
       </div>
+      </div>
+      <div id="analysisTabPane" class="d-none">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <div class="section-help">รายชื่อโรงเรียนที่เขตพื้นที่อนุมัติแล้ว · วิเคราะห์ข้อมูลคอมพิวเตอร์เพื่อการเรียน ปี 2569</div>
+          <div class="summary-count" id="analysisCount">0 โรงเรียน</div>
+        </div>
+        <div class="table-responsive">
+          <table id="analysisTable" class="table table-bordered table-hover align-middle w-100">
+            <thead><tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th class="text-end">จำนวนนักเรียน</th><th class="text-end">คอมพิวเตอร์การเรียน 69</th><th class="text-center">สัดส่วน คอม/นร</th><th>รูปแบบคอมพิวเตอร์</th></tr></thead>
+            <tbody id="analysisTableBody"><tr><td colspan="7" class="empty-state">แปลงข้อมูล COM เพื่อวิเคราะห์ข้อมูล</td></tr></tbody>
+          </table>
+        </div>
       </div>
       <div id="reportersTabPane" class="d-none">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
