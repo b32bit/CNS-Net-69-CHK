@@ -232,8 +232,8 @@
     const school = $("filterSchool").value;
     const area = $("filterArea").value;
     dataTable.column(2).search(district ? jQuery.fn.dataTable.util.escapeRegex(district) : "", false, true);
-    const schoolStatusColumn = dataType === "net" ? 4 : 7;
-    const areaStatusColumn = dataType === "net" ? 5 : 8;
+    const schoolStatusColumn = dataType === "net" ? 4 : 9;
+    const areaStatusColumn = dataType === "net" ? 5 : 10;
     dataTable.column(schoolStatusColumn).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
     if (area === "__not_approved") dataTable.column(areaStatusColumn).search("^(?!อนุมัติ)", true, false);
     else dataTable.column(areaStatusColumn).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
@@ -366,7 +366,7 @@
     $("inputSection").classList.remove("d-none");
     $("guideSection").classList.remove("d-none");
     $("tableSection").classList.add("d-none");
-    tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 8 : 11) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 8 : 13) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
     summaryCount.textContent = "ยังไม่มีข้อมูล";
     inputStatus.textContent = "รอรับข้อมูล";
     inputStatus.className = "small text-secondary ms-lg-2";
