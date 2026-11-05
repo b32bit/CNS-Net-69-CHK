@@ -78,7 +78,7 @@
     const net = dataType === "net";
     $("tableHead").innerHTML = net
       ? '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>ผู้ให้ข้อมูล</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>'
-      : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">ปี 2568</th><th class="text-end">ปัจจุบัน: เรียน</th><th class="text-end">ปัจจุบัน: บริหาร</th><th class="text-end">รวมปัจจุบัน</th><th class="text-end">ได้รับบริจาค</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
+      : '<tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th>รูปแบบคอมพิวเตอร์</th><th class="text-end">บริจาค 68</th><th class="text-end">เรียน 68</th><th class="text-end">เรียน 69</th><th class="text-end">บริหาร 69</th><th>สถานะโรงเรียน</th><th>สถานะเขต</th><th class="text-center">#</th><th>วันที่ดำเนินการล่าสุด</th></tr>';
     $("tableTitle").textContent = net
       ? "รายการการบันทึกข้อมูลด้านเครือข่ายอินเทอร์เน็ตในสังกัด สพฐ."
       : "รายการการบันทึกข้อมูลด้านคอมพิวเตอร์พร้อมอุปกรณ์ในสังกัด สพฐ.";
@@ -127,11 +127,10 @@
     const areaStatus = item.stausTxtEsa || form.stausTxtEsa || "รอการอนุมัติ";
     return [
       "", clean(code), schoolCell(school, code), clean(format),
+      Object.prototype.hasOwnProperty.call(donatedComputers, code) ? donatedComputers[code].toLocaleString("th-TH") : "-",
       Object.prototype.hasOwnProperty.call(computers2568, code) ? computers2568[code].toLocaleString("th-TH") : "-",
       hasRecord ? learning.toLocaleString("th-TH") : "-",
       hasRecord ? management.toLocaleString("th-TH") : "-",
-      hasRecord ? (learning + management).toLocaleString("th-TH") : "-",
-      Object.prototype.hasOwnProperty.call(donatedComputers, code) ? donatedComputers[code].toLocaleString("th-TH") : "-",
       statusBadge(schoolStatus, "", hasRecord ? "ok" : "pending"),
       statusBadge(areaStatus, item.esaApprovedAt || item.esaFeedbackAt || "", areaStatus === "อนุมัติ" ? "ok" : "neutral"),
       hasRecord ? actionCell(item, makeComActionUrl(item), school.id || code, school.name || code) : "",
@@ -232,8 +231,8 @@
     const school = $("filterSchool").value;
     const area = $("filterArea").value;
     dataTable.column(2).search(district ? jQuery.fn.dataTable.util.escapeRegex(district) : "", false, true);
-    const schoolStatusColumn = dataType === "net" ? 4 : 9;
-    const areaStatusColumn = dataType === "net" ? 5 : 10;
+    const schoolStatusColumn = dataType === "net" ? 4 : 8;
+    const areaStatusColumn = dataType === "net" ? 5 : 9;
     dataTable.column(schoolStatusColumn).search(school ? "^" + jQuery.fn.dataTable.util.escapeRegex(school) : "", true, false);
     if (area === "__not_approved") dataTable.column(areaStatusColumn).search("^(?!อนุมัติ)", true, false);
     else dataTable.column(areaStatusColumn).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
@@ -245,7 +244,7 @@
     showResultTab("records");
     tableBody.innerHTML = "";
     setTableHead();
-    const columnCount = dataType === "net" ? 8 : 13;
+    const columnCount = dataType === "net" ? 8 : 12;
     if (!items.length) {
       tableBody.innerHTML = '<tr><td colspan="' + columnCount + '" class="empty-state">ไม่พบรายการข้อมูลใน sourceData</td></tr>';
       summaryCount.textContent = "0 รายการ";
@@ -256,7 +255,7 @@
       const row = document.createElement("tr");
       toRow(item).forEach((value, index) => {
         const cell = document.createElement("td");
-        const htmlColumns = dataType === "net" ? [2,4,5,6] : [2,9,10,11];
+        const htmlColumns = dataType === "net" ? [2,4,5,6] : [2,8,9,10];
         if (htmlColumns.includes(index)) cell.innerHTML = value;
         else cell.textContent = value;
         row.appendChild(cell);
@@ -266,7 +265,7 @@
     tableBody.appendChild(fragment);
     summaryCount.textContent = items.length.toLocaleString("th-TH") + " รายการ";
     if (window.jQuery && jQuery.fn.DataTable) {
-      const noOrderColumns = dataType === "net" ? [0,6] : [0,11];
+      const noOrderColumns = dataType === "net" ? [0,6] : [0,10];
       dataTable = jQuery("#schoolTable").DataTable({
         pageLength:5, lengthMenu:[[5,10,25,50,100,-1],[5,10,25,50,100,"ทั้งหมด"]],
         order:[[2,"asc"]], autoWidth:false,
@@ -347,7 +346,7 @@
       setTableHead();
       if (jsonInput.value.trim()) convert();
       else {
-        tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 8 : 13) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="' + (dataType === "net" ? 8 : 12) + '" class="empty-state">วาง JSON แล้วกด “แปลงข้อมูล” เพื่อเริ่มตรวจสอบ</td></tr>';
         summaryCount.textContent = "ยังไม่มีข้อมูล";
       }
     });
