@@ -451,10 +451,14 @@
     minInput.classList.toggle("is-invalid", invalid && (minInput.value.trim() || maxInput.value.trim()));
     maxInput.classList.toggle("is-invalid", invalid && (minInput.value.trim() || maxInput.value.trim()));
     if (invalid) {
+      jQuery.fn.dataTable.ext.search = jQuery.fn.dataTable.ext.search.filter(fn => fn._analysisStudentsFilter !== true);
+      const rejectFilter = function(settings) { return settings.nTable.id !== "analysisTable"; };
+      rejectFilter._analysisStudentsFilter = true;
+      jQuery.fn.dataTable.ext.search.push(rejectFilter);
       analysisDataTable.draw();
       return;
     }
-    $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(fn => fn._analysisStudentsFilter !== true);
+    jQuery.fn.dataTable.ext.search = jQuery.fn.dataTable.ext.search.filter(fn => fn._analysisStudentsFilter !== true);
     const filter = function(settings, data) {
       if (settings.nTable.id !== "analysisTable") return true;
       const hasMin = min !== null;
@@ -467,7 +471,7 @@
       return (min === null || students >= min) && (max === null || students <= max);
     };
     filter._analysisStudentsFilter = true;
-    $.fn.dataTable.ext.search.push(filter);
+    jQuery.fn.dataTable.ext.search.push(filter);
     analysisDataTable.draw();
   }
   function render(items) {
