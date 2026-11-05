@@ -436,42 +436,22 @@
   }
   function applyAnalysisStudentFilter() {
     if (!analysisDataTable) return;
-    const minInput = $("analysisStudentsMin");
-    const maxInput = $("analysisStudentsMax");
-    if (!minInput || !maxInput) return;
-    const parseLimit = value => {
-      const text = String(value || "").replace(/,/g, "").trim();
-      if (!text) return null;
-      if (!/^\\d+(?:\\.\\d+)?$/.test(text)) return NaN;
-      return Number(text);
-    };
-    const min = parseLimit(minInput.value);
-    const max = parseLimit(maxInput.value);
-    const invalid = Number.isNaN(min) || Number.isNaN(max) || (min !== null && max !== null && min > max);
-    minInput.classList.toggle("is-invalid", invalid && (minInput.value.trim() || maxInput.value.trim()));
-    maxInput.classList.toggle("is-invalid", invalid && (minInput.value.trim() || maxInput.value.trim()));
-    if (invalid) {
-      jQuery.fn.dataTable.ext.search = jQuery.fn.dataTable.ext.search.filter(fn => fn._analysisStudentsFilter !== true);
-      const rejectFilter = function(settings) { return settings.nTable.id !== "analysisTable"; };
-      rejectFilter._analysisStudentsFilter = true;
-      jQuery.fn.dataTable.ext.search.push(rejectFilter);
-      analysisDataTable.draw();
-      return;
+    const select = $("analysisStudentsGroup");
+    if (!select) return;
+    const selected = select.value;
+    jQuery.fn.dataTable.ext.search = jQuery.fn.dataTable.ext.search.filter(fn => fn._analysisStudentsGroupFilter !== true);
+    if (selected !== "all") {
+      const [min, max] = selected.split("-").map(Number);
+      const filter = function(settings, data) {
+        if (settings.nTable.id !== "analysisTable") return true;
+        const raw = String(data[3] || "").replace(/,/g, "").trim();
+        if (!raw || raw === "-") return false;
+        const students = Number(raw);
+        return Number.isFinite(students) && students >= min && students <= max;
+      };
+      filter._analysisStudentsGroupFilter = true;
+      jQuery.fn.dataTable.ext.search.push(filter);
     }
-    jQuery.fn.dataTable.ext.search = jQuery.fn.dataTable.ext.search.filter(fn => fn._analysisStudentsFilter !== true);
-    const filter = function(settings, data) {
-      if (settings.nTable.id !== "analysisTable") return true;
-      const hasMin = min !== null;
-      const hasMax = max !== null;
-      if (!hasMin && !hasMax) return true;
-      const raw = String(data[3] || "").replace(/,/g, "").trim();
-      if (!raw || raw === "-") return false;
-      const students = Number(raw);
-      if (!Number.isFinite(students)) return false;
-      return (min === null || students >= min) && (max === null || students <= max);
-    };
-    filter._analysisStudentsFilter = true;
-    jQuery.fn.dataTable.ext.search.push(filter);
     analysisDataTable.draw();
   }
   function render(items) {
@@ -619,16 +599,7 @@
   $("recordsTab").addEventListener("click", () => showResultTab("records"));
   $("reportersTab").addEventListener("click", () => showResultTab("reporters"));
   $("analysisTab").addEventListener("click", () => showResultTab("analysis"));
-  ["analysisStudentsMin","analysisStudentsMax"].forEach(id => {
-    $(id).addEventListener("input", applyAnalysisStudentFilter);
-  });
-  $("analysisStudentsFilterClear").addEventListener("click", () => {
-    $("analysisStudentsMin").value = "";
-    $("analysisStudentsMax").value = "";
-    $("analysisStudentsMin").classList.remove("is-invalid");
-    $("analysisStudentsMax").classList.remove("is-invalid");
-    applyAnalysisStudentFilter();
-  });
+  $("analysisStudentsGroup").addEventListener("change", applyAnalysisStudentFilter);
     $("convertBtn").addEventListener("click", convert);
   $("clearBtn").addEventListener("click", () => {
     jsonInput.value = "";
