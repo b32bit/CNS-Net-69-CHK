@@ -13,6 +13,57 @@
   let dataTable = null;
   let reporterDataTable = null;
   const actionCounts = new Map();
+  const JSON_HISTORY_KEY = "cnsNet69JsonHistory";
+  const JSON_HISTORY_LIMIT = 10;
+  let isLoadingHistory = false;
+
+  function readJsonHistory() {
+    try {
+      const value = JSON.parse(localStorage.getItem(JSON_HISTORY_KEY) || "[]");
+      return Array.isArray(value) ? value : [];
+    } catch {
+      return [];
+    }
+  }
+  function renderJsonHistory() {
+    const select = $("jsonHistorySelect");
+    const loadButton = $("loadHistoryBtn");
+    if (!select || !loadButton) return;
+    const history = readJsonHistory();
+    select.innerHTML = "";
+    if (!history.length) {
+      select.add(new Option("ไม่มีประวัติ JSON", ""));
+      loadButton.disabled = true;
+      return;
+    }
+    select.add(new Option("เลือกประวัติ JSON", ""));
+    history.forEach(record => {
+      const date = new Date(record.createdAt);
+      const dateText = Number.isNaN(date.getTime()) ? record.createdAt : date.toLocaleString("th-TH");
+      const typeText = record.type === "net" ? "NET" : "COM";
+      select.add(new Option(typeText + " · " + Number(record.count || 0).toLocaleString("th-TH") +
+        " รายการ · " + dateText, record.id));
+    });
+    loadButton.disabled = !select.value;
+  }
+  function saveJsonHistory(raw, count) {
+    if (isLoadingHistory) return;
+    try {
+      const history = readJsonHistory();
+      history.unshift({
+        id: String(Date.now()) + "-" + Math.random().toString(36).slice(2, 7),
+        type: dataType,
+        createdAt: new Date().toISOString(),
+        count,
+        raw
+      });
+      localStorage.setItem(JSON_HISTORY_KEY, JSON.stringify(history.slice(0, JSON_HISTORY_LIMIT)));
+      renderJsonHistory();
+    } catch (error) {
+      inputStatus.textContent = "แปลงข้อมูลสำเร็จ แต่บันทึกประวัติไม่ได้ (พื้นที่ Local Storage อาจเต็ม)";
+      inputStatus.className = "small text-warning ms-lg-2";
+    }
+  }
 
   const clean = (value) => value === null || value === undefined || value === "" ? "-" : String(value);
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[ch]);
@@ -313,6 +364,7 @@
       const items = Array.isArray(parsed) ? parsed : parsed.sourceData;
       if (!Array.isArray(items)) throw new Error('ไม่พบรายการ sourceData หรือข้อมูลไม่ใช่ Array');
       render(items);
+      saveJsonHistory(raw, items.length);
       $("inputSection").classList.add("d-none");
       $("guideSection").classList.add("d-none");
       $("tableSection").classList.remove("d-none");
@@ -354,6 +406,32 @@
     });
   });
   setTableHead();
+  $("jsonHistorySelect").addEventListener("change", () => {
+    $("loadHistoryBtn").disabled = !$("jsonHistorySelect").value;
+  });
+  $("loadHistoryBtn").addEventListener("click", () => {
+    const selectedId = $("jsonHistorySelect").value;
+    const record = readJsonHistory().find(item => item.id === selectedId);
+    if (!record) {
+      inputStatus.textContent = "ไม่พบประวัติ JSON ที่เลือก";
+      inputStatus.className = "small text-danger ms-lg-2";
+      return;
+    }
+    dataType = record.type === "net" ? "net" : "com";
+    document.querySelectorAll(".data-type-btn").forEach(button => {
+      const active = button.dataset.type === dataType;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    jsonInput.value = record.raw;
+    isLoadingHistory = true;
+    convert();
+    isLoadingHistory = false;
+    if (!$("tableSection").classList.contains("d-none")) {
+      inputStatus.textContent = "เรียกคืนประวัติ " + (dataType === "net" ? "NET" : "COM") + " สำเร็จ";
+      inputStatus.className = "small text-success ms-lg-2";
+    }
+  });
   $("recordsTab").addEventListener("click", () => showResultTab("records"));
   $("reportersTab").addEventListener("click", () => showResultTab("reporters"));
     $("convertBtn").addEventListener("click", convert);
@@ -382,4 +460,5 @@
     event.target.value = "";
   });
   fillDistrictOptions();
+  renderJsonHistory();
 })();
