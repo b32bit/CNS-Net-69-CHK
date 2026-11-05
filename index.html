@@ -95,6 +95,20 @@
           <div class="section-help">รายชื่อโรงเรียนที่เขตพื้นที่อนุมัติแล้ว · วิเคราะห์ข้อมูลคอมพิวเตอร์เพื่อการเรียน ปี 2569</div>
           <div class="summary-count" id="analysisCount">0 โรงเรียน</div>
         </div>
+        <div class="row g-2 align-items-end mb-3">
+          <div class="col-6 col-md-3">
+            <label for="analysisStudentsMin" class="form-label filter-label">จำนวนนักเรียนขั้นต่ำ</label>
+            <input id="analysisStudentsMin" type="text" inputmode="numeric" class="form-control form-control-sm" placeholder="เช่น 10">
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="analysisStudentsMax" class="form-label filter-label">จำนวนนักเรียนสูงสุด</label>
+            <input id="analysisStudentsMax" type="text" inputmode="numeric" class="form-control form-control-sm" placeholder="เช่น 100">
+          </div>
+          <div class="col-12 col-md-auto">
+            <button id="analysisStudentsFilterClear" type="button" class="btn btn-outline-secondary btn-sm">ล้างตัวกรอง</button>
+          </div>
+          <div class="col-12 small text-secondary">กรอกจำนวนขั้นต่ำและ/หรือสูงสุด เพื่อกรองโรงเรียนตามจำนวนนักเรียน</div>
+        </div>
         <div class="table-responsive">
           <table id="analysisTable" class="table table-bordered table-hover align-middle w-100">
             <thead><tr><th class="text-center">ลำดับ</th><th>รหัส</th><th>โรงเรียน / อำเภอ</th><th class="text-end">จำนวนนักเรียน</th><th class="text-end">คอมพิวเตอร์การเรียน 69</th><th class="text-center">สัดส่วน คอม/นร</th><th>รูปแบบคอมพิวเตอร์</th></tr></thead>
