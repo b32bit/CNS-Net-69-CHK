@@ -88,8 +88,10 @@
   }
   function schoolCell(school, code) {
     const district = districtByCode[code] || school.district || "ไม่พบใน Main table";
-    return '<span class="school-name">' + escapeHtml(school.name || "-") +
-      '</span> <span class="school-district">(' + escapeHtml(district) + ')</span>';
+    const schoolUrl = "https://c7.sk3.go.th/mis7sk3/school.php?school_id=" + encodeURIComponent(code);
+    return '<a class="school-name" href="' + escapeHtml(schoolUrl) +
+      '" target="_blank" rel="noopener noreferrer">' + escapeHtml(school.name || "-") +
+      '</a> <span class="school-district">(' + escapeHtml(district) + ')</span>';
   }
   function actionCell(item, url, key, label) {
     return '<span class="action-wrap"><a class="action-btn" href="' + escapeHtml(url) +
