@@ -271,6 +271,62 @@
     $("reportersTab").setAttribute("aria-selected", String(reporters));
     if (reporters && reporterDataTable) reporterDataTable.columns.adjust();
   }
+  async function updatePagesVersionStatus() {
+    const versionLink = $("pagesVersionLink");
+    const statusNode = $("pagesVersionStatus");
+    const buildNode = $("pagesBuildDate");
+    if (!versionLink || !statusNode || !buildNode) return;
+
+    const apiBase = "https://api.github.com/repos/b32bit/CNS-Net-69-CHK";
+    const headers = { Accept: "application/vnd.github+json" };
+    const fetchJson = async (url) => {
+      const response = await fetch(url, { headers, cache: "no-store" });
+      if (!response.ok) throw new Error("GitHub API HTTP " + response.status);
+      return response.json();
+    };
+    try {
+      const [branch, runs] = await Promise.all([
+        fetchJson(apiBase + "/commits/main"),
+        fetchJson(apiBase + "/actions/workflows/pages.yml/runs?branch=main&per_page=1")
+      ]);
+      const latestCommit = branch.sha;
+      const latestRun = runs.workflow_runs?.[0];
+      if (!latestRun) throw new Error("ไม่พบข้อมูล GitHub Pages deployment");
+
+      const deployedCommit = latestRun.head_sha || "";
+      const shortSha = deployedCommit ? deployedCommit.slice(0, 7) : "-";
+      versionLink.textContent = shortSha;
+      versionLink.href = deployedCommit
+        ? "https://github.com/b32bit/CNS-Net-69-CHK/commit/" + encodeURIComponent(deployedCommit)
+        : "https://github.com/b32bit/CNS-Net-69-CHK/actions/workflows/pages.yml";
+      const buildTime = latestRun.updated_at || latestRun.created_at;
+      buildNode.textContent = "Build: " + (buildTime
+        ? new Date(buildTime).toLocaleString("th-TH", { dateStyle: "short", timeStyle: "short" })
+        : "-");
+
+      statusNode.className = "pages-version-status";
+      if (latestRun.status !== "completed") {
+        statusNode.textContent = "กำลัง Deploy";
+        statusNode.classList.add("is-pending");
+      } else if (latestRun.conclusion !== "success") {
+        statusNode.textContent = "Deploy ไม่สำเร็จ";
+        statusNode.classList.add("is-error");
+      } else if (deployedCommit && deployedCommit === latestCommit) {
+        statusNode.textContent = "Latest";
+        statusNode.classList.add("is-current");
+      } else {
+        statusNode.textContent = "Outdated · รออัปเดต";
+        statusNode.classList.add("is-pending");
+      }
+    } catch (error) {
+      versionLink.textContent = "ไม่ทราบเวอร์ชัน";
+      versionLink.href = "https://github.com/b32bit/CNS-Net-69-CHK/actions/workflows/pages.yml";
+      statusNode.textContent = "ตรวจสอบไม่ได้";
+      statusNode.className = "pages-version-status is-error";
+      buildNode.textContent = "Build: -";
+    }
+  }
+
   function fillDistrictOptions() {
     const select = $("filterDistrict");
     const selected = select.value;
@@ -461,4 +517,5 @@
   });
   fillDistrictOptions();
   renderJsonHistory();
+  updatePagesVersionStatus();
 })();
