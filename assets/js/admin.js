@@ -386,8 +386,8 @@
       const students = Object.prototype.hasOwnProperty.call(studentsByCode, code) ? studentsByCode[code] : null;
       const computers = Number(form.qtyForLearning) || 0;
       const ratio = students === null ? "-" : computers > 0
-        ? "1 : " + (students / computers).toLocaleString("th-TH", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
-        : "ไม่มีคอมพิวเตอร์";
+        ? (students / computers).toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        : students.toLocaleString("th-TH");
       const format = form.mstComputerFormat?.title ||
         form.mstComputerFormatForArea?.title ||
         form.legacyComputerFormat || (form.isAnyComputer ? "มีคอมพิวเตอร์ (ไม่ระบุรูปแบบ)" : "-");
