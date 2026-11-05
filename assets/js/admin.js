@@ -60,10 +60,23 @@
         count,
         raw
       });
-      localStorage.setItem(JSON_HISTORY_KEY, JSON.stringify(history.slice(0, JSON_HISTORY_LIMIT)));
+      // หากพื้นที่ Local Storage ไม่พอ ให้ลบประวัติเก่าสุดออกทีละรายการ
+      // เพื่อให้สามารถบันทึกรายการใหม่ได้ แทนการหยุดบันทึกหลังรายการแรก
+      let saved = false;
+      while (history.length) {
+        try {
+          localStorage.setItem(JSON_HISTORY_KEY, JSON.stringify(history.slice(0, JSON_HISTORY_LIMIT)));
+          saved = true;
+          break;
+        } catch (storageError) {
+          if (history.length <= 1) throw storageError;
+          history.pop();
+        }
+      }
+      if (!saved) throw new Error("ไม่สามารถบันทึกประวัติ JSON ได้");
       renderJsonHistory();
     } catch (error) {
-      inputStatus.textContent = "แปลงข้อมูลสำเร็จ แต่บันทึกประวัติไม่ได้ (พื้นที่ Local Storage อาจเต็ม)";
+      inputStatus.textContent = "แปลงข้อมูลสำเร็จ แต่บันทึกประวัติไม่ได้ (JSON อาจมีขนาดใหญ่เกินพื้นที่จัดเก็บ)";
       inputStatus.className = "small text-warning ms-lg-2";
     }
   }
@@ -387,7 +400,7 @@
       const computers = Number(form.qtyForLearning) || 0;
       const ratio = students === null ? "-" : computers > 0
         ? (students / computers).toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-        : students.toLocaleString("th-TH");
+        : students.toLocaleString("th-TH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const format = form.mstComputerFormat?.title ||
         form.mstComputerFormatForArea?.title ||
         form.legacyComputerFormat || (form.isAnyComputer ? "มีคอมพิวเตอร์ (ไม่ระบุรูปแบบ)" : "-");
