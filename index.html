@@ -96,18 +96,17 @@
           <div class="summary-count" id="analysisCount">0 โรงเรียน</div>
         </div>
         <div class="row g-2 align-items-end mb-3">
-          <div class="col-6 col-md-3">
-            <label for="analysisStudentsMin" class="form-label filter-label">จำนวนนักเรียนขั้นต่ำ</label>
-            <input id="analysisStudentsMin" type="text" inputmode="numeric" class="form-control form-control-sm" placeholder="เช่น 10">
+          <div class="col-12 col-md-4 col-lg-3">
+            <label for="analysisStudentsGroup" class="form-label filter-label">กลุ่มจำนวนนักเรียน</label>
+            <select id="analysisStudentsGroup" class="form-select form-select-sm">
+              <option value="all">ทุกกลุ่ม</option>
+              <option value="0-60">0–60 คน</option>
+              <option value="61-120">61–120 คน</option>
+              <option value="121-300">121–300 คน</option>
+              <option value="301-500">301–500 คน</option>
+              <option value="501-1500">501–1,500 คน</option>
+            </select>
           </div>
-          <div class="col-6 col-md-3">
-            <label for="analysisStudentsMax" class="form-label filter-label">จำนวนนักเรียนสูงสุด</label>
-            <input id="analysisStudentsMax" type="text" inputmode="numeric" class="form-control form-control-sm" placeholder="เช่น 100">
-          </div>
-          <div class="col-12 col-md-auto">
-            <button id="analysisStudentsFilterClear" type="button" class="btn btn-outline-secondary btn-sm">ล้างตัวกรอง</button>
-          </div>
-          <div class="col-12 small text-secondary">กรอกจำนวนขั้นต่ำและ/หรือสูงสุด เพื่อกรองโรงเรียนตามจำนวนนักเรียน</div>
         </div>
         <div class="table-responsive">
           <table id="analysisTable" class="table table-bordered table-hover align-middle w-100">
