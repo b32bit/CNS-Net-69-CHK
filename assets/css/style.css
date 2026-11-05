@@ -54,3 +54,7 @@ body{font-family:"Sarabun",Tahoma,sans-serif;background:#f5f7fa;color:#172b44;fo
 #schoolTable td:nth-child(5){min-width:145px}
 #schoolTable td:nth-child(6),#schoolTable td:nth-child(7),#schoolTable td:nth-child(8){text-align:right;font-variant-numeric:tabular-nums}
 @media(max-width:767px){.data-type-btn{flex:1 1 100%}}
+
+/* COM comparison columns */
+#schoolTable td:nth-child(5),#schoolTable td:nth-child(6),#schoolTable td:nth-child(7),#schoolTable td:nth-child(8),#schoolTable td:nth-child(9){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+#schoolTable td:nth-child(5),#schoolTable td:nth-child(8),#schoolTable td:nth-child(9){font-weight:600}
