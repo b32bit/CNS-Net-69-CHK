@@ -10,8 +10,11 @@
   // Master data จากไฟล์ Excel ที่ผู้ใช้แนบ: ปี 2568 (เพื่อการเรียนการสอน) และเครื่องที่ได้รับบริจาค
   const computers2568 = {"1090550297":0,"1090550298":0,"1090550333":1,"1090550213":0,"1090550322":0,"1090550365":0,"1090550373":0,"1090550310":0,"1090550370":0,"1090550323":0,"1090550282":0,"1090550266":2,"1090550294":2,"1090550377":3,"1090550376":3,"1090550264":7,"1090550336":4,"1090550186":3,"1090550201":3,"1090550304":5,"1090550301":4,"1090550344":5,"1090550193":5,"1090550268":5,"1090550331":10,"1090550314":6,"1090550342":6,"1090550241":12,"1090550321":9,"1090550236":7,"1090550362":9,"1090550267":7,"1090550200":9,"1090550204":6,"1090550315":10,"1090550229":10,"1090550254":12,"1090550187":12,"1090550372":9,"1090550326":9,"1090550233":15,"1090550364":10,"1090550265":15,"1090550199":12,"1090550366":16,"1090550378":15,"1090550221":20,"1090550240":50,"1090550181":15,"1090550228":35,"1090550337":30,"1090550363":42,"1090550320":36,"1090550348":60,"1090550194":0,"1090550251":1,"1090550222":0,"1090550338":0,"1090550246":0,"1090550225":0,"1090550286":0,"1090550317":0,"1090550216":0,"1090550203":0,"1090550210":0,"1090550253":0,"1090550232":0,"1090550291":2,"1090550192":2,"1090550205":3,"1090550272":2,"1090550281":5,"1090550184":5,"1090550209":3,"1090550355":4,"1090550234":5,"1090550352":4,"1090550185":6,"1090550276":4,"1090550302":5,"1090550270":5,"1090550346":5,"1090550274":6,"1090550218":6,"1090550220":7,"1090550202":8,"1090550368":9,"1090550256":11,"1090550334":10,"1090550327":10,"1090550330":8,"1090550214":10,"1090550350":10,"1090550277":14,"1090550374":15,"1090550339":3,"1090550324":6,"1090550356":10,"1090550319":12,"1090550226":6,"1090550305":7,"1090550335":8,"1090550215":11,"1090550250":22,"1090550243":12,"1090550359":2,"1090550208":7,"1090550189":7,"1090550308":5,"1090550307":5,"1090550311":8,"1090550235":8,"1090550238":16,"1090550290":15,"1090550197":16,"1090550190":0,"1090550375":0,"1090550354":0,"1090550275":2,"1090550357":2,"1090550347":2,"1090550223":2,"1090550219":2,"1090550255":2,"1090550288":3,"1090550263":4,"1090550358":4,"1090550312":5,"1090550245":8,"1090550191":6,"1090550182":8,"1090550239":6,"1090550269":3,"1090550285":0,"1090550279":1,"1090550349":3,"1090550244":3,"1090550252":4,"1090550360":5,"1090550217":6,"1090550284":4,"1090550259":7,"1090550278":3,"1090550262":14,"1090550212":0,"1090550224":4,"1090550289":5,"1090550258":6};
   const donatedComputers = {"1090550235":5,"1090550245":5,"1090550274":5,"1090550255":5,"1090550291":5,"1090550232":5,"1090550222":5,"1090550241":10,"1090550181":20};
+  // Master data จำนวนนักเรียนจากไฟล์ Excel จำนวน 193 โรงเรียน รวม 33,404 คน
+  const studentsByCode = JSON.parse("{\"1090550246\":100,\"1090550251\":96,\"1090550254\":223,\"1090550256\":106,\"1090550259\":41,\"1090550249\":224,\"1090550272\":63,\"1090550276\":62,\"1090550252\":45,\"1090550248\":162,\"1090550250\":188,\"1090550245\":54,\"1090550239\":30,\"1090550242\":117,\"1090550244\":37,\"1090550237\":214,\"1090550230\":245,\"1090550232\":65,\"1090550233\":210,\"1090550262\":47,\"1090550263\":58,\"1090550266\":161,\"1090550268\":130,\"1090550269\":15,\"1090550277\":100,\"1090550238\":107,\"1090550240\":226,\"1090550243\":218,\"1090550241\":278,\"1090550271\":183,\"1090550273\":140,\"1090550275\":56,\"1090550278\":15,\"1090550279\":25,\"1090550253\":64,\"1090550247\":188,\"1090550267\":139,\"1090550228\":1135,\"1090550235\":97,\"1090550264\":269,\"1090550274\":88,\"1090550258\":49,\"1090550255\":54,\"1090550234\":103,\"1090550236\":145,\"1090550231\":152,\"1090550229\":183,\"1090550261\":168,\"1090550265\":160,\"1090550270\":77,\"1090550300\":117,\"1090550290\":80,\"1090550293\":177,\"1090550294\":137,\"1090550288\":70,\"1090550291\":103,\"1090550304\":177,\"1090550306\":175,\"1090550308\":95,\"1090550281\":120,\"1090550284\":21,\"1090550285\":56,\"1090550287\":421,\"1090550280\":1464,\"1090550282\":129,\"1090550283\":174,\"1090550286\":87,\"1090550289\":59,\"1090550292\":109,\"1090550312\":44,\"1090550309\":365,\"1090550310\":147,\"1090550302\":82,\"1090550301\":120,\"1090550297\":223,\"1090550298\":213,\"1090550303\":219,\"1090550305\":132,\"1090550307\":91,\"1090550311\":95,\"1090550209\":54,\"1090550210\":84,\"1090550211\":182,\"1090550212\":35,\"1090550213\":163,\"1090550193\":135,\"1090550194\":112,\"1090550195\":124,\"1090550197\":404,\"1090550223\":58,\"1090550188\":350,\"1090550189\":97,\"1090550190\":57,\"1090550192\":98,\"1090550222\":92,\"1090550196\":113,\"1090550181\":595,\"1090550182\":47,\"1090550183\":305,\"1090550186\":102,\"1090550187\":232,\"1090550191\":33,\"1090550221\":174,\"1090550224\":60,\"1090550225\":87,\"1090550226\":122,\"1090550185\":122,\"1090550227\":111,\"1090550184\":98,\"1090550198\":321,\"1090550199\":117,\"1090550200\":195,\"1090550201\":119,\"1090550202\":95,\"1090550203\":74,\"1090550204\":116,\"1090550205\":92,\"1090550206\":145,\"1090550207\":212,\"1090550208\":164,\"1090550217\":40,\"1090550218\":71,\"1090550219\":56,\"1090550220\":96,\"1090550214\":90,\"1090550215\":123,\"1090550216\":79,\"1090550328\":255,\"1090550333\":159,\"1090550334\":90,\"1090550335\":140,\"1090550336\":162,\"1090550329\":325,\"1090550331\":262,\"1090550332\":342,\"1090550337\":894,\"1090550338\":105,\"1090550340\":157,\"1090550324\":385,\"1090550325\":153,\"1090550327\":91,\"1090550330\":62,\"1090550339\":356,\"1090550341\":380,\"1090550317\":78,\"1090550318\":123,\"1090550319\":329,\"1090550342\":135,\"1090550343\":408,\"1090550313\":276,\"1090550314\":147,\"1090550315\":199,\"1090550316\":186,\"1090550320\":728,\"1090550321\":195,\"1090550322\":149,\"1090550323\":126,\"1090550326\":143,\"1090550357\":72,\"1090550358\":47,\"1090550359\":240,\"1090550361\":231,\"1090550362\":203,\"1090550345\":214,\"1090550349\":39,\"1090550344\":140,\"1090550375\":59,\"1090550376\":116,\"1090550377\":140,\"1090550378\":142,\"1090550379\":208,\"1090550373\":133,\"1090550374\":89,\"1090550351\":296,\"1090550352\":68,\"1090550346\":65,\"1090550347\":62,\"1090550348\":915,\"1090550350\":69,\"1090550354\":52,\"1090550355\":79,\"1090550356\":398,\"1090550360\":44,\"1090550363\":1089,\"1090550364\":131,\"1090550365\":151,\"1090550370\":159,\"1090550372\":149,\"1090550366\":161,\"1090550367\":228,\"1090550368\":91,\"1090550369\":311,\"1090550371\":208}");
   let dataTable = null;
   let reporterDataTable = null;
+  let analysisDataTable = null;
   const actionCounts = new Map();
   const JSON_HISTORY_KEY = "cnsNet69JsonHistory";
   const JSON_HISTORY_LIMIT = 10;
@@ -200,6 +203,7 @@
   function destroyTable() {
     if (dataTable) { dataTable.destroy(); dataTable = null; }
     if (reporterDataTable) { reporterDataTable.destroy(); reporterDataTable = null; }
+    if (analysisDataTable) { analysisDataTable.destroy(); analysisDataTable = null; }
   }
   function firstValue(object, keys) {
     for (const key of keys) {
@@ -263,13 +267,22 @@
   }
   function showResultTab(tab) {
     const reporters = tab === "reporters";
-    $("recordsTabPane").classList.toggle("d-none", reporters);
+    const analysis = tab === "analysis";
+    $("recordsTabPane").classList.toggle("d-none", reporters || analysis);
     $("reportersTabPane").classList.toggle("d-none", !reporters);
-    $("recordsTab").classList.toggle("active", !reporters);
+    $("analysisTabPane").classList.toggle("d-none", !analysis);
+    $("recordsTab").classList.toggle("active", !reporters && !analysis);
     $("reportersTab").classList.toggle("active", reporters);
-    $("recordsTab").setAttribute("aria-selected", String(!reporters));
+    $("analysisTab").classList.toggle("active", analysis);
+    $("recordsTab").setAttribute("aria-selected", String(!reporters && !analysis));
     $("reportersTab").setAttribute("aria-selected", String(reporters));
+    $("analysisTab").setAttribute("aria-selected", String(analysis));
     if (reporters && reporterDataTable) reporterDataTable.columns.adjust();
+    if (analysis && analysisDataTable) analysisDataTable.columns.adjust();
+    if (analysis && dataType !== "com") {
+      $("analysisTableBody").innerHTML = '<tr><td colspan="7" class="empty-state">แท็บวิเคราะห์ข้อมูลใช้กับข้อมูลประเภท COM เท่านั้น</td></tr>';
+      $("analysisCount").textContent = "0 โรงเรียน";
+    }
   }
   async function updatePagesVersionStatus() {
     const versionLink = $("pagesVersionLink");
@@ -347,9 +360,83 @@
     else dataTable.column(areaStatusColumn).search(area ? "^" + jQuery.fn.dataTable.util.escapeRegex(area) : "", true, false);
     dataTable.draw();
   }
+  function renderAnalysis(items) {
+    const body = $("analysisTableBody");
+    if (!body) return;
+    body.innerHTML = "";
+    if (dataType !== "com") {
+      body.innerHTML = '<tr><td colspan="7" class="empty-state">แท็บวิเคราะห์ข้อมูลใช้กับข้อมูลประเภท COM เท่านั้น</td></tr>';
+      $("analysisCount").textContent = "0 โรงเรียน";
+      return;
+    }
+    const approved = items.filter(item => {
+      const form = item.formComputer || {};
+      const status = String(item.stausTxtEsa || form.stausTxtEsa || "").trim();
+      return status.startsWith("อนุมัติ");
+    });
+    if (!approved.length) {
+      body.innerHTML = '<tr><td colspan="7" class="empty-state">ไม่พบโรงเรียนที่เขตพื้นที่อนุมัติแล้ว</td></tr>';
+      $("analysisCount").textContent = "0 โรงเรียน";
+      return;
+    }
+    const rows = approved.map(item => {
+      const school = item.mstSchool || {};
+      const form = item.formComputer || {};
+      const code = String(school.code || "").trim();
+      const students = Object.prototype.hasOwnProperty.call(studentsByCode, code) ? studentsByCode[code] : null;
+      const computers = Number(form.qtyForLearning) || 0;
+      const ratio = students === null ? "-" : computers > 0
+        ? "1 : " + (students / computers).toLocaleString("th-TH", { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+        : "ไม่มีคอมพิวเตอร์";
+      const format = form.mstComputerFormat?.title ||
+        form.mstComputerFormatForArea?.title ||
+        form.legacyComputerFormat || (form.isAnyComputer ? "มีคอมพิวเตอร์ (ไม่ระบุรูปแบบ)" : "-");
+      return { code, school, students, computers, ratio, format };
+    });
+    rows.sort((a,b) => String(a.code).localeCompare(String(b.code)));
+    rows.forEach((record,index) => {
+      const tr=document.createElement("tr");
+      const values=[
+        String(index+1),
+        record.code || "-",
+        schoolCell(record.school,record.code),
+        record.students === null ? "-" : record.students.toLocaleString("th-TH"),
+        record.computers.toLocaleString("th-TH"),
+        record.ratio,
+        record.format
+      ];
+      values.forEach((value,col) => {
+        const td=document.createElement("td");
+        if(col===2) td.innerHTML=value;
+        else td.textContent=value;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    $("analysisCount").textContent = rows.length.toLocaleString("th-TH") + " โรงเรียน";
+    if(window.jQuery && jQuery.fn.DataTable) {
+      analysisDataTable=jQuery("#analysisTable").DataTable({
+        pageLength:10,lengthMenu:[[10,25,50,100,-1],[10,25,50,100,"ทั้งหมด"]],
+        order:[[1,"asc"]],autoWidth:false,
+        language:{
+          search:"ค้นหา:",lengthMenu:"แสดง _MENU_ รายการ",
+          info:"แสดง _START_ ถึง _END_ จาก _TOTAL_ โรงเรียน",
+          infoEmpty:"ไม่มีข้อมูล",infoFiltered:"(กรองจากทั้งหมด _MAX_ โรงเรียน)",
+          zeroRecords:"ไม่พบข้อมูลที่ค้นหา",emptyTable:"ไม่มีข้อมูล",
+          paginate:{first:"แรก",last:"สุดท้าย",next:"ถัดไป",previous:"ก่อนหน้า"}
+        },
+        columnDefs:[{targets:[0],orderable:false,searchable:false}],
+        drawCallback:function(){
+          const api=this.api(),info=api.page.info();
+          api.column(0,{page:"current"}).nodes().each((cell,index)=>{cell.textContent=info.start+index+1;});
+        }
+      });
+    }
+  }
   function render(items) {
     destroyTable();
     renderReporters(items);
+    renderAnalysis(items);
     showResultTab("records");
     tableBody.innerHTML = "";
     setTableHead();
@@ -490,6 +577,7 @@
   });
   $("recordsTab").addEventListener("click", () => showResultTab("records"));
   $("reportersTab").addEventListener("click", () => showResultTab("reporters"));
+  $("analysisTab").addEventListener("click", () => showResultTab("analysis"));
     $("convertBtn").addEventListener("click", convert);
   $("clearBtn").addEventListener("click", () => {
     jsonInput.value = "";
